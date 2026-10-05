@@ -267,3 +267,114 @@ input::placeholder, textarea::placeholder { color:rgba(23,20,20,.32); }
   .timeline-section { padding-top:60px; }
   .timeline-head { align-items:flex-start; flex-direction:column; }
 }
+
+/* Visual QA pass */
+@media (hover: hover) {
+  .timeline-item { cursor: pointer; }
+  .plot-card:nth-child(4n+1) { transform-origin: 10% 90%; }
+  .plot-card:nth-child(4n+2) { transform-origin: 90% 10%; }
+  .plot-card:nth-child(4n+3) { transform-origin: 50% 50%; }
+  .plot-card:nth-child(4n+4) { transform-origin: 90% 90%; }
+}
+
+.hero-actions .text-link {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 0;
+}
+
+.timeline-item:focus-visible .timeline-marker {
+  outline:3px solid var(--blue);
+  outline-offset:4px;
+}
+
+input[type="date"] {
+  color-scheme: light;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity:.65;
+  cursor:pointer;
+}
+
+@media (max-width: 650px) {
+  .site-header { padding-inline:16px; }
+  .brand { font-size:21px; }
+  .button-small { min-height:38px; padding-inline:11px; }
+
+  .hero {
+    padding-inline:20px;
+    padding-top:58px;
+  }
+
+  .hero-copy > p {
+    font-size:17px;
+    margin-block:26px;
+  }
+
+  .hero-art {
+    min-height:270px;
+    margin-top:-5px;
+  }
+
+  .hero-number { font-size:115px; }
+  .orbit-one { width:285px; height:175px; }
+  .orbit-two { width:225px; height:320px; }
+
+  .statement h2 { font-size:45px; }
+  .example-head h2 { font-size:48px; }
+
+  .create-page, .plots-page {
+    padding-top:52px;
+    padding-bottom:75px;
+  }
+
+  .create-intro h1,
+  .page-heading h1,
+  .not-found h1 {
+    font-size:52px;
+  }
+
+  .create-form {
+    margin-top:48px;
+  }
+
+  .create-form > label:first-of-type input {
+    font-size:32px;
+  }
+
+  .form-footer {
+    align-items:flex-start;
+    flex-direction:column;
+    gap:18px;
+  }
+
+  .form-footer .button { width:100%; }
+
+  .plot-card {
+    min-height:300px;
+    padding:22px;
+  }
+
+  .plot-card h2 { font-size:43px; }
+
+  .plot-intro-grid { gap:35px; }
+  .plot-intro h1 { font-size:52px; }
+  .progress-stamp {
+    width:160px;
+    justify-self:start;
+  }
+
+  .timeline-item {
+    padding-block:26px;
+  }
+
+  .timeline-content strong {
+    font-size:29px;
+  }
+
+  .current-action {
+    font-size:9px;
+  }
+}
