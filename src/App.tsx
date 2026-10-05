@@ -7,6 +7,9 @@ import {
   CalendarDays,
   Check,
   Circle,
+  ChevronDown,
+  ChevronUp,
+  GripVertical,
   Home as HomeIcon,
   Plus,
   Sparkles,
@@ -483,6 +486,30 @@ function PlotPage({
     onUpdate({ ...plot, milestones: next });
   };
 
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+
+  const moveMilestone = (milestoneId: string, direction: -1 | 1) => {
+    const index = plot.milestones.findIndex((item) => item.id === milestoneId);
+    const targetIndex = index + direction;
+    if (index < 0 || targetIndex < 0 || targetIndex >= plot.milestones.length) return;
+
+    const next = [...plot.milestones];
+    [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+    onUpdate({ ...plot, milestones: next });
+  };
+
+  const reorderMilestone = (fromId: string, toId: string) => {
+    if (fromId === toId) return;
+    const fromIndex = plot.milestones.findIndex((item) => item.id === fromId);
+    const toIndex = plot.milestones.findIndex((item) => item.id === toId);
+    if (fromIndex < 0 || toIndex < 0) return;
+
+    const next = [...plot.milestones];
+    const [moved] = next.splice(fromIndex, 1);
+    next.splice(toIndex, 0, moved);
+    onUpdate({ ...plot, milestones: next });
+  };
+
   const deletePlot = () => {
     if (window.confirm(`Delete "${plot.title}"?`)) {
       onDelete(plot.id);
@@ -528,12 +555,35 @@ function PlotPage({
 
         <div className="timeline">
           {plot.milestones.map((milestone, index) => (
-            <button
-              type="button"
-              className={`timeline-item ${milestone.status}`}
+            <div
+              className={`timeline-item ${milestone.status} ${draggedId === milestone.id ? "is-dragging" : ""}`}
               key={milestone.id}
+              draggable
+              tabIndex={0}
               onClick={() => advanceMilestone(milestone.id)}
-              aria-label={`${milestone.title}, ${milestone.status}. Change status.`}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  advanceMilestone(milestone.id);
+                }
+              }}
+              onDragStart={(event) => {
+                setDraggedId(milestone.id);
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", milestone.id);
+              }}
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                const fromId = event.dataTransfer.getData("text/plain") || draggedId;
+                if (fromId) reorderMilestone(fromId, milestone.id);
+                setDraggedId(null);
+              }}
+              onDragEnd={() => setDraggedId(null)}
+              aria-label={`${milestone.title}, ${milestone.status}. Click to change status. Drag to reorder.`}
             >
               <span className="timeline-line" aria-hidden="true" />
               <span className="timeline-marker">
@@ -544,11 +594,32 @@ function PlotPage({
                 <strong>{milestone.title}</strong>
                 <span className="timeline-date">{formatDate(milestone.date)}</span>
                 {milestone.note && <span className="timeline-note">{milestone.note}</span>}
+                <span className="timeline-hint"><GripVertical size={13} /> Drag to reorder</span>
+              </span>
+              <span className="timeline-controls" onClick={(event) => event.stopPropagation()}>
+                <button
+                  type="button"
+                  className="timeline-move"
+                  onClick={() => moveMilestone(milestone.id, -1)}
+                  disabled={index === 0}
+                  aria-label={`Move ${milestone.title} up`}
+                >
+                  <ChevronUp size={15} />
+                </button>
+                <button
+                  type="button"
+                  className="timeline-move"
+                  onClick={() => moveMilestone(milestone.id, 1)}
+                  disabled={index === plot.milestones.length - 1}
+                  aria-label={`Move ${milestone.title} down`}
+                >
+                  <ChevronDown size={15} />
+                </button>
               </span>
               {milestone.status === "current" && (
                 <span className="current-action">Mark complete <ArrowRight size={15} /></span>
               )}
-            </button>
+            </div>
           ))}
         </div>
       </section>
