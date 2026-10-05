@@ -45,20 +45,7 @@ type Plotline = {
 
 const STORAGE_KEY = "plotline-data";
 
-const seedPlot: Plotline = {
-  id: "moving-to-lagos",
-  title: "Moving to Lagos",
-  description: "A simple path from decision to feeling properly settled.",
-  startDate: "2026-09-01",
-  milestones: [
-    { id: "m1", title: "Find apartments", date: "2026-09-03", status: "complete" },
-    { id: "m2", title: "Inspect apartments", date: "2026-09-10", status: "complete" },
-    { id: "m3", title: "Pay deposit", date: "2026-09-18", status: "current" },
-    { id: "m4", title: "Get the keys", date: "2026-09-28", status: "upcoming" },
-    { id: "m5", title: "Move in", date: "2026-10-03", status: "upcoming" },
-    { id: "m6", title: "Feel settled", date: "2026-10-17", status: "upcoming" },
-  ],
-};
+const seedPlot = examplePlots[1];
 
 function loadPlots(): Plotline[] {
   try {
@@ -170,7 +157,8 @@ function Footer() {
 }
 
 function Home({ plots }: { plots: Plotline[] }) {
-  const example = plots.find((plot) => plot.id === seedPlot.id) ?? plots[0] ?? seedPlot;
+  const [exampleIndex, setExampleIndex] = useState(0);
+  const activeExample = examplePlots[exampleIndex];
 
   return (
     <>
@@ -185,29 +173,53 @@ function Home({ plots }: { plots: Plotline[] }) {
           <p>Turn a big thing into a clear path of moments, so you can see where you are and what comes next.</p>
           <div className="hero-actions">
             <Link to="/create" className="button button-dark">Create a plot <ArrowRight size={18} /></Link>
-            <Link to={`/plot/${example.id}`} className="text-link">See an example <ArrowUpRight size={17} /></Link>
+            <Link to="/create" className="text-link">Make yours <ArrowUpRight size={17} /></Link>
           </div>
         </div>
-        <div className="hero-art hero-product-art" aria-label="Plotline example showing a chapter and its milestones">
+
+        <div className="hero-art hero-product-art" aria-label={`Plotline example showing ${activeExample.title} and its milestones`}>
           <div className="product-window">
-            <div className="product-window-top"><span>YOUR CHAPTER</span><strong>01 / 06</strong></div>
-            <div className="product-window-title">Moving to Lagos</div>
-            <div className="product-window-meta">6 milestones · 2 complete · 1 current</div>
+            <div className="product-window-top"><span>EXAMPLE CHAPTER</span><strong>{String(exampleIndex + 1).padStart(2, "0")} / {String(examplePlots.length).padStart(2, "0")}</strong></div>
+            <div className="product-window-title">{activeExample.title}</div>
+            <div className="product-window-meta">{activeExample.milestones.length} milestones · {activeExample.milestones.filter((item) => item.status === "complete").length} complete · 1 current</div>
             <div className="product-window-path">
               <span className="window-line" />
-              {["Find", "Inspect", "Deposit", "Keys", "Move", "Settled"].map((item, index) => (
-                <div className={`window-step ${index < 2 ? "done" : index === 2 ? "current" : ""}`} key={item}>
-                  <span className="window-dot">{index < 2 ? "✓" : ""}</span>
-                  <small>0{index + 1}</small>
-                  <strong>{item}</strong>
+              {activeExample.milestones.map((milestone, index) => (
+                <div className={`window-step ${milestone.status === "complete" ? "done" : milestone.status === "current" ? "current" : ""}`} key={milestone.id}>
+                  <span className="window-dot">{milestone.status === "complete" ? "✓" : ""}</span>
+                  <small>{String(index + 1).padStart(2, "0")}</small>
+                  <strong>{milestone.title}</strong>
                 </div>
               ))}
             </div>
-            <div className="product-window-footer"><span>YOU ARE HERE</span><b>Inspect apartments</b><ArrowRight size={16} /></div>
+            <div className="product-window-footer">
+              <span>YOU ARE HERE</span>
+              <b>{activeExample.milestones.find((item) => item.status === "current")?.title}</b>
+              <ArrowRight size={16} />
+            </div>
           </div>
-          <div className="hero-sticker sticker-top">ONE CHAPTER<br />AT A TIME</div>
+          <div className="hero-sticker sticker-top">NOT A CHECKLIST<br />A CHAPTER</div>
           <div className="hero-sticker sticker-bottom">SEE WHERE<br />YOU ARE</div>
         </div>
+
+        <div className="hero-example-picker" aria-label="Plotline examples">
+          <span className="hero-example-label">TRY A CHAPTER</span>
+          <div className="example-switcher">
+            {examplePlots.map((example, index) => (
+              <button
+                type="button"
+                className={`example-choice ${index === exampleIndex ? "active" : ""}`}
+                key={example.id}
+                onClick={() => setExampleIndex(index)}
+                aria-pressed={index === exampleIndex}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                {example.title}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="hero-side-note">CHAPTERS / MILESTONES / MOVEMENT</div>
       </section>
 
@@ -226,11 +238,37 @@ function Home({ plots }: { plots: Plotline[] }) {
         <section className="product-section">
           <div className="section-pad product-heading">
             <div className="section-label">03 / THE PRODUCT</div>
-            <div><h2>One chapter.<br /><em>One visible path.</em></h2><p>Everything important lives on the timeline.</p></div>
+            <div>
+              <h2>One chapter.<br /><em>One visible path.</em></h2>
+              <p>Everything important lives on the timeline. The chapter can be anything.</p>
+            </div>
           </div>
           <div className="product-demo">
-            <div className="demo-sidebar"><span>THE CHAPTER</span><strong>{example.title}</strong><small>YOUR PLOT</small><div className="demo-stat"><b>06</b><span>milestones</span></div><div className="demo-stat"><b>02</b><span>complete</span></div></div>
-            <div className="demo-main"><TimelinePreview plot={example} /></div>
+            <div className="demo-sidebar">
+              <span>EXAMPLE CHAPTER</span>
+              <strong>{activeExample.title}</strong>
+              <small>NOT A TEMPLATE</small>
+              <div className="demo-stat"><b>{String(activeExample.milestones.length).padStart(2, "0")}</b><span>milestones</span></div>
+              <div className="demo-stat"><b>{String(activeExample.milestones.filter((item) => item.status === "complete").length).padStart(2, "0")}</b><span>complete</span></div>
+            </div>
+            <div className="demo-main"><TimelinePreview plot={activeExample} /></div>
+          </div>
+          <div className="section-pad product-example-list">
+            <span className="example-list-label">A few things you could plot</span>
+            <div className="example-list">
+              {examplePlots.map((example, index) => (
+                <button
+                  type="button"
+                  className={`example-list-item ${index === exampleIndex ? "active" : ""}`}
+                  key={example.id}
+                  onClick={() => setExampleIndex(index)}
+                >
+                  <span>0{index + 1}</span>
+                  <strong>{example.title}</strong>
+                  <ArrowUpRight size={16} />
+                </button>
+              ))}
+            </div>
           </div>
         </section>
       </ScrollReveal>
@@ -249,7 +287,10 @@ function Home({ plots }: { plots: Plotline[] }) {
       <ScrollReveal>
         <section className="possibilities section-pad">
           <div className="section-label">05 / FOR THE BIG THINGS</div>
-          <div className="possibilities-copy"><h2>Move house.<br />Get the job.<br />Ship the thing.<br /><em>Start somewhere new.</em></h2><p>Plotline works wherever the destination matters, but the path is still taking shape.</p></div>
+          <div className="possibilities-copy">
+            <h2>Move house.<br />Get the job.<br />Ship the thing.<br /><em>Start somewhere new.</em></h2>
+            <p>Plotline is not for one kind of goal. It is for the moments where the destination matters, but the path is still taking shape.</p>
+          </div>
         </section>
       </ScrollReveal>
 
