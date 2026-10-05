@@ -7,6 +7,7 @@ import {
   CalendarDays,
   Check,
   Circle,
+  Home,
   Plus,
   Sparkles,
   Trash2,
@@ -68,24 +69,27 @@ function loadPlots(): Plotline[] {
 
 function formatDate(date?: string) {
   if (!date) return "No date";
+  const parsed = new Date(`${date}T12:00:00`);
   return new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(date));
+  }).format(parsed);
 }
 
 function slugify(value: string) {
-  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 }
 
 function Header() {
   return (
     <header className="site-header">
       <Link to="/" className="brand" aria-label="Plotline home">
-        <span className="brand-mark" aria-hidden="true">
-          /
-        </span>
+        <span className="brand-mark" aria-hidden="true">/</span>
         <span>plotline</span>
       </Link>
       <nav>
@@ -108,21 +112,17 @@ function Footer() {
 }
 
 function Home({ plots }: { plots: Plotline[] }) {
-  const example = plots[0] ?? seedPlot;
+  const example = plots.find((plot) => plot.id === seedPlot.id) ?? plots[0] ?? seedPlot;
 
   return (
     <>
       <section className="hero">
         <div className="hero-pattern" aria-hidden="true" />
+        <div className="hero-grid-mark" aria-hidden="true" />
         <div className="hero-copy">
-          <div className="eyebrow"><span>01</span> MAKE THE NEXT CHAPTER VISIBLE</div>
-          <h1>
-            Big things are easier when you can <em>see the path.</em>
-          </h1>
-          <p>
-            Plotline turns a messy chapter into a sequence of moments you can
-            actually move through.
-          </p>
+          <div className="eyebrow hero-eyebrow"><span>01</span> MAKE THE NEXT CHAPTER VISIBLE</div>
+          <h1>Big things are easier when you can <em>see the path.</em></h1>
+          <p>Plotline turns a messy chapter into a sequence of moments you can actually move through.</p>
           <div className="hero-actions">
             <Link to="/create" className="button button-dark">
               Create a plot <ArrowRight size={18} />
@@ -140,18 +140,17 @@ function Home({ plots }: { plots: Plotline[] }) {
           <div className="hero-sticker sticker-top">ONE STEP<br />AT A TIME</div>
           <div className="hero-sticker sticker-bottom">NO PERFECT<br />PLAN NEEDED</div>
           <div className="hero-number">01</div>
+          <div className="hero-cross cross-one">+</div>
+          <div className="hero-cross cross-two">+</div>
         </div>
+        <div className="hero-side-note">CHAPTERS / PLANS / MOMENTS / MOVEMENT</div>
       </section>
 
       <section className="statement section-pad">
         <div className="section-label">WHY PLOTLINE</div>
         <div className="statement-grid">
           <h2>Not a calendar.<br /><span>Not a productivity dashboard.</span></h2>
-          <p>
-            Plotline is for a specific chapter: moving, getting your first
-            frontend job, launching a startup, planning a wedding, shipping a
-            project. Give the chapter a shape, then follow it.
-          </p>
+          <p>Plotline is for a specific chapter: moving, getting your first frontend job, launching a startup, planning a wedding, shipping a project. Give the chapter a shape, then follow it.</p>
         </div>
       </section>
 
@@ -187,8 +186,9 @@ function TimelinePreview({ plot }: { plot: Plotline }) {
     <div className="preview-timeline">
       {plot.milestones.map((milestone, index) => (
         <div className={`preview-node ${milestone.status}`} key={milestone.id}>
-          <div className="node-connector" aria-hidden="true" />
-          <div className="node-marker">{milestone.status === "complete" ? <Check size={15} /> : index + 1}</div>
+          <div className="node-marker">
+            {milestone.status === "complete" ? <Check size={15} /> : index + 1}
+          </div>
           <div className="node-copy">
             <span>{formatDate(milestone.date)}</span>
             <strong>{milestone.title}</strong>
@@ -209,15 +209,12 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
     { title: "", date: "", note: "" },
   ]);
 
-  const canCreate = title.trim() && milestones.some((item) => item.title.trim());
+  const canCreate = Boolean(title.trim() && milestones.some((item) => item.title.trim()));
 
-  const addMilestone = () =>
-    setMilestones((items) => [...items, { title: "", date: "", note: "" }]);
+  const addMilestone = () => setMilestones((items) => [...items, { title: "", date: "", note: "" }]);
 
   const updateMilestone = (index: number, field: "title" | "date" | "note", value: string) =>
-    setMilestones((items) =>
-      items.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item)
-    );
+    setMilestones((items) => items.map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item));
 
   const removeMilestone = (index: number) =>
     setMilestones((items) => items.length > 2 ? items.filter((_, i) => i !== index) : items);
@@ -275,7 +272,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
               <span>Milestones</span>
               <p>Think in moments, not every little task.</p>
             </div>
-            <span className="builder-count">{milestones.length}</span>
+            <span className="builder-count">{milestones.filter((item) => item.title.trim()).length} / {milestones.length}</span>
           </div>
           <div className="builder-list">
             {milestones.map((milestone, index) => (
@@ -333,11 +330,15 @@ function Plots({ plots }: { plots: Plotline[] }) {
           {plots.map((plot, index) => {
             const complete = plot.milestones.filter((item) => item.status === "complete").length;
             const progress = plot.milestones.length ? Math.round((complete / plot.milestones.length) * 100) : 0;
+            const current = plot.milestones.find((item) => item.status === "current");
             return (
               <Link to={`/plot/${plot.id}`} className={`plot-card card-${index % 4}`} key={plot.id}>
                 <div className="card-top"><span>{String(index + 1).padStart(2, "0")}</span><ArrowUpRight size={18} /></div>
-                <h2>{plot.title}</h2>
-                <p>{plot.description || "A chapter worth giving a shape to."}</p>
+                <div className="card-main">
+                  <span className="card-kicker">{progress === 100 ? "Chapter complete" : current ? "In motion" : "Ready to begin"}</span>
+                  <h2>{plot.title}</h2>
+                  <p>{plot.description || "A chapter worth giving a shape to."}</p>
+                </div>
                 <div className="card-bottom">
                   <div className="mini-progress"><span style={{ width: `${progress}%` }} /></div>
                   <strong>{complete}/{plot.milestones.length}</strong>
@@ -375,28 +376,30 @@ function PlotPage({
 
   if (!plot) return null;
 
-  const toggleMilestone = (milestoneId: string) => {
-    const target = plot.milestones.find((item) => item.id === milestoneId);
-    if (!target) return;
+  const advanceMilestone = (milestoneId: string) => {
+    const targetIndex = plot.milestones.findIndex((item) => item.id === milestoneId);
+    if (targetIndex < 0) return;
 
-    const isCompleting = target.status !== "complete";
-    let promoted = false;
+    const target = plot.milestones[targetIndex];
+    const next = [...plot.milestones];
 
-    const nextMilestones = plot.milestones.map((item) => {
-      if (item.id === milestoneId) {
-        return { ...item, status: isCompleting ? "complete" as const : "current" as const };
-      }
-      if (isCompleting && !promoted && item.status === "upcoming") {
-        promoted = true;
-        return { ...item, status: "current" as const };
-      }
-      if (!isCompleting && item.status === "current") {
-        return { ...item, status: "upcoming" as const };
-      }
-      return item;
-    });
+    if (target.status === "upcoming") {
+      next.forEach((item, index) => {
+        if (item.status === "current") next[index] = { ...item, status: "upcoming" };
+      });
+      next[targetIndex] = { ...target, status: "current" };
+    } else if (target.status === "current") {
+      next[targetIndex] = { ...target, status: "complete" };
+      const nextUpcoming = next.findIndex((item, index) => index > targetIndex && item.status === "upcoming");
+      if (nextUpcoming >= 0) next[nextUpcoming] = { ...next[nextUpcoming], status: "current" };
+    } else {
+      next.forEach((item, index) => {
+        if (item.status === "current") next[index] = { ...item, status: "upcoming" };
+      });
+      next[targetIndex] = { ...target, status: "current" };
+    }
 
-    onUpdate({ ...plot, milestones: nextMilestones });
+    onUpdate({ ...plot, milestones: next });
   };
 
   const deletePlot = () => {
@@ -431,12 +434,12 @@ function PlotPage({
         <div className="timeline-head">
           <div>
             <div className="section-label">THE PATH</div>
-            <p>Click a milestone to move it forward or pull it back.</p>
+            <p>Tap a milestone to change where you are in the chapter.</p>
           </div>
           <button type="button" className="delete-link" onClick={deletePlot}><Trash2 size={15} /> Delete plot</button>
         </div>
 
-        <div className="big-progress">
+        <div className="big-progress" aria-label={`${progress}% complete`}>
           <span style={{ width: `${progress}%` }} />
         </div>
 
@@ -446,7 +449,8 @@ function PlotPage({
               type="button"
               className={`timeline-item ${milestone.status}`}
               key={milestone.id}
-              onClick={() => toggleMilestone(milestone.id)}
+              onClick={() => advanceMilestone(milestone.id)}
+              aria-label={`${milestone.title}, ${milestone.status}. Change status.`}
             >
               <span className="timeline-line" aria-hidden="true" />
               <span className="timeline-marker">
@@ -474,6 +478,18 @@ function PlotPage({
   );
 }
 
+function NotFound() {
+  return (
+    <main className="not-found section-pad">
+      <div className="not-found-mark"><Home size={28} /></div>
+      <div className="eyebrow"><span>404</span> WRONG TURN</div>
+      <h1>This path <em>does not exist.</em></h1>
+      <p>Nothing lives at this address. The chapter is still here.</p>
+      <Link to="/" className="button button-dark"><ArrowLeft size={18} /> Back to Plotline</Link>
+    </main>
+  );
+}
+
 function App() {
   const [plots, setPlots] = useState<Plotline[]>(loadPlots);
 
@@ -493,6 +509,7 @@ function App() {
         <Route path="/create" element={<CreatePlot onCreate={createPlot} />} />
         <Route path="/plots" element={<Plots plots={plots} />} />
         <Route path="/plot/:id" element={<PlotPage plots={plots} onUpdate={updatePlot} onDelete={deletePlot} />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>
