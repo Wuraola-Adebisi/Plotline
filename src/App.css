@@ -572,3 +572,85 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .demo-main { padding:25px 14px; overflow:hidden; }
   .possibilities h2 { font-size:57px; }
 }
+
+
+/* Interaction + readability pass */
+.hero h1 {
+  font-size:clamp(58px, 7vw, 104px);
+  line-height:.91;
+  letter-spacing:-.065em;
+}
+.manifesto h2,
+.possibilities h2 {
+  font-size:clamp(50px, 6.4vw, 92px);
+  line-height:.9;
+  letter-spacing:-.065em;
+}
+.product-heading h2 { font-size:clamp(48px, 5.5vw, 78px); }
+.plot-intro h1 { font-size:clamp(58px, 7vw, 104px); line-height:.9; letter-spacing:-.065em; }
+.create-intro h1,
+.page-heading h1,
+.not-found h1 { line-height:.9; letter-spacing:-.06em; }
+
+.timeline-item {
+  cursor:grab;
+  transition:background .2s ease, opacity .2s ease, transform .2s ease;
+}
+.timeline-item:active { cursor:grabbing; }
+.timeline-item:hover { background:rgba(255,255,255,.28); }
+.timeline-item.is-dragging { opacity:.38; transform:scale(.99); }
+.timeline-item:focus-visible {
+  outline:3px solid var(--blue);
+  outline-offset:5px;
+}
+.timeline-hint {
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin-top:8px;
+  font:9px var(--mono);
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  opacity:.35;
+}
+.timeline-controls {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  align-self:center;
+}
+.timeline-move {
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--line);
+  background:var(--paper);
+  color:var(--ink);
+  cursor:pointer;
+  transition:background .18s ease, transform .18s ease, border-color .18s ease;
+}
+.timeline-move:hover:not(:disabled) {
+  background:var(--lime);
+  border-color:var(--ink);
+  transform:translateY(-2px);
+}
+.timeline-move:disabled { opacity:.2; cursor:not-allowed; }
+.timeline-item.current .timeline-hint { opacity:.5; }
+
+@media (max-width:850px) {
+  .hero h1 { font-size:clamp(54px, 10vw, 82px); }
+  .manifesto h2,
+  .possibilities h2 { font-size:clamp(48px, 10vw, 72px); }
+  .plot-intro h1 { font-size:clamp(54px, 10vw, 82px); }
+  .timeline-item { grid-template-columns:58px 1fr; }
+  .timeline-controls { grid-column:2; align-self:start; margin-top:8px; }
+  .current-action { grid-column:2; }
+}
+@media (max-width:500px) {
+  .hero h1 { font-size:54px; }
+  .manifesto h2,
+  .possibilities h2 { font-size:48px; }
+  .plot-intro h1 { font-size:54px; }
+  .timeline-hint { display:none; }
+}
