@@ -156,7 +156,7 @@ function Footer() {
   );
 }
 
-function Home({ plots }: { plots: Plotline[] }) {
+function Home() {
   const [exampleIndex, setExampleIndex] = useState(0);
   const activeExample = examplePlots[exampleIndex];
 
@@ -730,7 +730,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Home plots={plots} />} />
+        <Route path="/" element={<Home />} />
         <Route path="/create" element={<CreatePlot onCreate={createPlot} />} />
         <Route path="/plots" element={<Plots plots={plots} />} />
         <Route path="/plot/:id" element={<PlotPage plots={plots} onUpdate={updatePlot} onDelete={deletePlot} />} />
