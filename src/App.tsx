@@ -7,7 +7,7 @@ import {
   CalendarDays,
   Check,
   Circle,
-  Home,
+  Home as HomeIcon,
   Plus,
   Sparkles,
   Trash2,
@@ -481,7 +481,7 @@ function PlotPage({
 function NotFound() {
   return (
     <main className="not-found section-pad">
-      <div className="not-found-mark"><Home size={28} /></div>
+      <div className="not-found-mark"><HomeIcon size={28} /></div>
       <div className="eyebrow"><span>404</span> WRONG TURN</div>
       <h1>This path <em>does not exist.</em></h1>
       <p>Nothing lives at this address. The chapter is still here.</p>
