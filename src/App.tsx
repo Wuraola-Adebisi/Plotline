@@ -587,6 +587,7 @@ function PlotPage({
   const { id } = useParams();
   const navigate = useNavigate();
   const plot = plots.find((item) => item.id === id);
+  const [draggedId, setDraggedId] = useState<string | null>(null);
 
   const progress = useMemo(() => {
     if (!plot?.milestones.length) return 0;
@@ -624,8 +625,6 @@ function PlotPage({
 
     onUpdate({ ...plot, milestones: next });
   };
-
-  const [draggedId, setDraggedId] = useState<string | null>(null);
 
   const moveMilestone = (milestoneId: string, direction: -1 | 1) => {
     const index = plot.milestones.findIndex((item) => item.id === milestoneId);
