@@ -121,9 +121,9 @@ function Header() {
         <span className="brand-mark" aria-hidden="true">/</span>
         <span>plotline</span>
       </Link>
-      <nav>
+
+      <nav className="site-nav" aria-label="Main navigation">
         <Link to="/plots" className="nav-link">Your plots</Link>
-        <Link to="/privacy" className="nav-link">Privacy</Link>
         <Link to="/create" className="button button-dark button-small">
           <Plus size={16} /> New plot
         </Link>
@@ -135,9 +135,36 @@ function Header() {
 function Footer() {
   return (
     <footer className="site-footer">
-      <span>plotline / make the next chapter visible</span>
-      <span>Built for the things that do not fit in a checklist.</span>
-      <span className="footer-links"><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link></span>
+      <div className="footer-main">
+        <div className="footer-brand">
+          <Link to="/" className="footer-logo" aria-label="Plotline home">
+            <span className="brand-mark" aria-hidden="true">/</span>
+            <span>plotline</span>
+          </Link>
+          <p>Make the next chapter visible. Turn a big thing into a path you can actually move through.</p>
+          <Link to="/create" className="footer-cta">Start a plot <ArrowRight size={15} /></Link>
+        </div>
+
+        <div className="footer-links-group">
+          <div>
+            <span className="footer-heading">Explore</span>
+            <Link to="/">Home</Link>
+            <Link to="/plots">Your plots</Link>
+            <Link to="/create">Create a plot</Link>
+          </div>
+          <div>
+            <span className="footer-heading">Information</span>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/terms">Terms</Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} Plotline</span>
+        <span>Built for the things that do not fit in a checklist.</span>
+        <span>Chapters / Milestones / Movement</span>
+      </div>
     </footer>
   );
 }
