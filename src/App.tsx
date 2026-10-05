@@ -518,8 +518,6 @@ function PlotPage({
           ))}
         </div>
       </section>
-
-      </section>
       </ScrollReveal>
       <ScrollReveal>
       <section className="plot-bottom section-pad">
