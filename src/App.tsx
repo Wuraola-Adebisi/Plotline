@@ -478,6 +478,7 @@ function PlotPage({
         </div>
       </section>
 
+      <ScrollReveal>
       <section className="timeline-section section-pad">
         <div className="timeline-head">
           <div>
@@ -518,10 +519,14 @@ function PlotPage({
         </div>
       </section>
 
+      </section>
+      </ScrollReveal>
+      <ScrollReveal>
       <section className="plot-bottom section-pad">
         <div className="bottom-note"><ArrowDownRight size={34} /><span>Progress does not need to be linear.</span></div>
         <Link to="/create" className="button button-dark">Start another chapter <Plus size={18} /></Link>
       </section>
+      </ScrollReveal>
     </main>
   );
 }
