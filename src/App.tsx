@@ -45,6 +45,77 @@ type Plotline = {
 
 const STORAGE_KEY = "plotline-data";
 
+
+const examplePlots: Plotline[] = [
+  {
+    id: "launch-my-first-product",
+    title: "Launch my first product",
+    description: "From the first usable version to putting it in the world.",
+    startDate: "2026-09-08",
+    milestones: [
+      { id: "launch-1", title: "Shape the idea", date: "2026-09-10", status: "complete" },
+      { id: "launch-2", title: "Build the MVP", date: "2026-09-22", status: "complete" },
+      { id: "launch-3", title: "Test with people", date: "2026-10-03", status: "current" },
+      { id: "launch-4", title: "Polish the launch", date: "2026-10-10", status: "upcoming" },
+      { id: "launch-5", title: "Put it live", date: "2026-10-17", status: "upcoming" },
+      { id: "launch-6", title: "See what happens", date: "2026-10-24", status: "upcoming" },
+    ],
+  },
+  {
+    id: "moving-to-lagos",
+    title: "Moving to Lagos",
+    description: "A simple path from decision to feeling properly settled.",
+    startDate: "2026-09-01",
+    milestones: [
+      { id: "move-1", title: "Find apartments", date: "2026-09-03", status: "complete" },
+      { id: "move-2", title: "Inspect apartments", date: "2026-09-10", status: "complete" },
+      { id: "move-3", title: "Pay deposit", date: "2026-09-18", status: "current" },
+      { id: "move-4", title: "Get the keys", date: "2026-09-28", status: "upcoming" },
+      { id: "move-5", title: "Move in", date: "2026-10-03", status: "upcoming" },
+      { id: "move-6", title: "Feel settled", date: "2026-10-17", status: "upcoming" },
+    ],
+  },
+  {
+    id: "land-my-first-frontend-role",
+    title: "Land my first frontend role",
+    description: "Turn the job search into a sequence instead of one giant task.",
+    startDate: "2026-08-24",
+    milestones: [
+      { id: "job-1", title: "Sharpen the portfolio", date: "2026-08-28", status: "complete" },
+      { id: "job-2", title: "Start applying", date: "2026-09-02", status: "complete" },
+      { id: "job-3", title: "Get through interviews", date: "2026-10-06", status: "current" },
+      { id: "job-4", title: "Choose the right offer", date: "2026-10-14", status: "upcoming" },
+      { id: "job-5", title: "Start the role", date: "2026-10-26", status: "upcoming" },
+    ],
+  },
+  {
+    id: "plan-the-wedding",
+    title: "Plan the wedding",
+    description: "Keep the big decisions visible without turning the whole thing into a checklist.",
+    startDate: "2026-07-12",
+    milestones: [
+      { id: "wed-1", title: "Set the date", date: "2026-07-15", status: "complete" },
+      { id: "wed-2", title: "Book the venue", date: "2026-07-28", status: "complete" },
+      { id: "wed-3", title: "Send invitations", date: "2026-10-08", status: "current" },
+      { id: "wed-4", title: "Final fittings", date: "2026-11-01", status: "upcoming" },
+      { id: "wed-5", title: "Get married", date: "2026-11-21", status: "upcoming" },
+    ],
+  },
+  {
+    id: "ship-a-client-website",
+    title: "Ship a client website",
+    description: "A project path from first conversation to launch day.",
+    startDate: "2026-09-14",
+    milestones: [
+      { id: "site-1", title: "Kickoff", date: "2026-09-15", status: "complete" },
+      { id: "site-2", title: "Approve the direction", date: "2026-09-19", status: "complete" },
+      { id: "site-3", title: "Build the pages", date: "2026-10-07", status: "current" },
+      { id: "site-4", title: "Review together", date: "2026-10-12", status: "upcoming" },
+      { id: "site-5", title: "Launch", date: "2026-10-16", status: "upcoming" },
+    ],
+  },
+];
+
 const seedPlot = examplePlots[1];
 
 function loadPlots(): Plotline[] {
@@ -621,7 +692,7 @@ function PlotPage({
           <span style={{ width: `${progress}%` }} />
         </div>
 
-        <div className="timeline">
+        <div className="timeline" style={{ ["--milestone-count" as string]: plot.milestones.length }}>
           <div className="timeline-path" aria-hidden="true">
             {plot.milestones.map((milestone, index) => (
               <span
