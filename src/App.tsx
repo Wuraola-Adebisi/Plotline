@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -85,6 +85,32 @@ function slugify(value: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+
+function Seo({ title, description }: { title: string; description: string }) {
+  useEffect(() => {
+    document.title = title;
+    const descriptionTag = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (descriptionTag) descriptionTag.content = description;
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (canonical) canonical.href = window.location.href.split("#")[0];
+  }, [title, description]);
+  return null;
+}
+
+function ScrollReveal({ children, className = "" }: { children: ReactNode; className?: string }) {
+  const [visible, setVisible] = useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!ref.current || typeof IntersectionObserver === "undefined") { setVisible(true); return; }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); observer.disconnect(); }
+    }, { threshold: 0.12 });
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return <div ref={ref} className={`reveal ${visible ? "is-visible" : ""} ${className}`}>{children}</div>;
+}
+
 function Header() {
   return (
     <header className="site-header">
@@ -93,7 +119,7 @@ function Header() {
         <span>plotline</span>
       </Link>
       <nav>
-        <Link to="/plots" className="nav-link">Your plots</Link>
+        <Link to="/plots" className="nav-link">Your plots</Link>\n        <Link to="/privacy" className="nav-link">Privacy</Link>
         <Link to="/create" className="button button-dark button-small">
           <Plus size={16} /> New plot
         </Link>
@@ -106,7 +132,7 @@ function Footer() {
   return (
     <footer className="site-footer">
       <span>plotline / make the next chapter visible</span>
-      <span>Built for the things that do not fit in a checklist.</span>
+      <span>Built for the things that do not fit in a checklist.</span>\n      <span className="footer-links"><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link></span>
     </footer>
   );
 }
@@ -121,8 +147,8 @@ function Home({ plots }: { plots: Plotline[] }) {
         <div className="hero-grid-mark" aria-hidden="true" />
         <div className="hero-copy">
           <div className="eyebrow hero-eyebrow"><span>01</span> MAKE THE NEXT CHAPTER VISIBLE</div>
-          <h1>Big things are easier when you can <em>see the path.</em></h1>
-          <p>Plotline turns a messy chapter into a sequence of moments you can actually move through.</p>
+          <h1>Make the next<br /><em>chapter visible.</em></h1>
+          <p>Turn a big, messy thing into a path you can actually move through.</p>
           <div className="hero-actions">
             <Link to="/create" className="button button-dark">
               Create a plot <ArrowRight size={18} />
@@ -146,7 +172,7 @@ function Home({ plots }: { plots: Plotline[] }) {
         <div className="hero-side-note">CHAPTERS / PLANS / MOMENTS / MOVEMENT</div>
       </section>
 
-      <section className="statement section-pad">
+      <ScrollReveal><section className="statement section-pad">
         <div className="section-label">WHY PLOTLINE</div>
         <div className="statement-grid">
           <h2>Not a calendar.<br /><span>Not a productivity dashboard.</span></h2>
@@ -154,7 +180,7 @@ function Home({ plots }: { plots: Plotline[] }) {
         </div>
       </section>
 
-      <section className="example-section">
+      </section></ScrollReveal>\n\n      <ScrollReveal><section className="example-section">
         <div className="example-head">
           <div>
             <div className="section-label">AN EXAMPLE</div>
@@ -167,7 +193,7 @@ function Home({ plots }: { plots: Plotline[] }) {
         <TimelinePreview plot={example} />
       </section>
 
-      <section className="dark-cta">
+      </section></ScrollReveal>\n\n      <ScrollReveal><section className="dark-cta">
         <div className="cta-scribble" aria-hidden="true">→</div>
         <div>
           <div className="section-label light">YOUR NEXT CHAPTER</div>
@@ -199,7 +225,33 @@ function TimelinePreview({ plot }: { plot: Plotline }) {
   );
 }
 
-function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
+
+function LegalPage({ type }: { type: "privacy" | "terms" }) {
+  const privacy = type === "privacy";
+  return (
+    <main className="legal-page section-pad">
+      <Seo title={privacy ? "Privacy Policy — Plotline" : "Terms of Use — Plotline"} description={privacy ? "How Plotline handles information and local data." : "The terms that apply when you use Plotline."} />
+      <Link to="/" className="back-link"><ArrowLeft size={16} /> Back home</Link>
+      <div className="legal-kicker">{privacy ? "PRIVACY" : "TERMS"} / LAST UPDATED OCTOBER 5, 2026</div>
+      <h1>{privacy ? <>Privacy <em>Policy.</em></> : <>Terms of <em>Use.</em></>}</h1>
+      {privacy ? <div className="legal-copy">
+        <p>Plotline is a browser-based tool for turning a major chapter or goal into a visual sequence of milestones. This policy explains what information the current version of Plotline handles.</p>
+        <h2>What we store</h2><p>Your plots are stored in your browser using local storage. They may include chapter names, descriptions, dates, milestone titles, notes, and progress states that you enter. This data is not sent to a Plotline server by the current version of the product.</p>
+        <h2>What we collect</h2><p>Plotline does not currently require an account, collect a name or email address, or use advertising trackers. We do not currently operate a backend database for your plots.</p>
+        <h2>Your responsibility</h2><p>Because plot data is stored locally, clearing browser storage, using a different browser or device, or certain browser privacy settings may remove access to saved plots. Do not use Plotline as the sole record for critical information.</p>
+        <h2>Changes</h2><p>This policy may change as Plotline gains features such as accounts, analytics, cloud sync, or other services. If those features materially change how information is handled, this page will be updated.</p>
+      </div> : <div className="legal-copy">
+        <p>By using Plotline, you agree to use the product responsibly and to these terms. Plotline is a planning and visualization tool, not professional, legal, financial, medical, or other expert advice.</p>
+        <h2>The product</h2><p>Plotline lets you create and manage personal chapter timelines in your browser. Features may change, be removed, or become unavailable without notice.</p>
+        <h2>Your content</h2><p>You remain responsible for the information you enter into Plotline. Keep independent copies of anything important. The current version stores plot data locally on your device.</p>
+        <h2>Acceptable use</h2><p>Do not use Plotline to store unlawful content, interfere with the service, or attempt unauthorized access to systems or data.</p>
+        <h2>No guarantees</h2><p>Plotline is provided on an “as available” basis. We do not guarantee that the service will always be available, error-free, or that locally stored data will never be lost.</p>
+        <h2>Changes to these terms</h2><p>These terms may be updated as the product develops. Continued use of Plotline after an update means you accept the revised terms.</p>
+      </div>}
+    </main>
+  );
+}
+\nfunction CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -241,7 +293,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
   };
 
   return (
-    <main className="create-page section-pad">
+    <main className="create-page section-pad">\n      <Seo title="Create a plot — Plotline" description="Turn a chapter, goal, or major transition into a visual path." />
       <div className="create-intro">
         <Link to="/" className="back-link"><ArrowLeft size={16} /> Back home</Link>
         <div className="eyebrow"><span>02</span> START WITH THE CHAPTER</div>
@@ -309,7 +361,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
 
 function Plots({ plots }: { plots: Plotline[] }) {
   return (
-    <main className="plots-page section-pad">
+    <main className="plots-page section-pad">\n      <Seo title="Your plots — Plotline" description="See and continue the chapters you have mapped in Plotline." />
       <div className="page-heading">
         <div>
           <div className="eyebrow"><span>03</span> YOUR CHAPTERS</div>
@@ -410,7 +462,7 @@ function PlotPage({
   };
 
   return (
-    <main className="plot-page">
+    <main className="plot-page">\n      <Seo title={`${plot?.title ?? "Plot"} — Plotline`} description={plot?.description || "A visual path for a chapter you are moving through."} />
       <section className="plot-intro">
         <div className="plot-intro-pattern" aria-hidden="true" />
         <div className="section-pad plot-intro-inner">
@@ -480,7 +532,7 @@ function PlotPage({
 
 function NotFound() {
   return (
-    <main className="not-found section-pad">
+    <main className="not-found section-pad">\n      <Seo title="Page not found — Plotline" description="The Plotline page you requested does not exist." />
       <div className="not-found-mark"><HomeIcon size={28} /></div>
       <div className="eyebrow"><span>404</span> WRONG TURN</div>
       <h1>This path <em>does not exist.</em></h1>
@@ -508,7 +560,7 @@ function App() {
         <Route path="/" element={<Home plots={plots} />} />
         <Route path="/create" element={<CreatePlot onCreate={createPlot} />} />
         <Route path="/plots" element={<Plots plots={plots} />} />
-        <Route path="/plot/:id" element={<PlotPage plots={plots} onUpdate={updatePlot} onDelete={deletePlot} />} />
+        <Route path="/plot/:id" element={<PlotPage plots={plots} onUpdate={updatePlot} onDelete={deletePlot} />} />\n        <Route path="/privacy" element={<LegalPage type="privacy" />} />\n        <Route path="/terms" element={<LegalPage type="terms" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
