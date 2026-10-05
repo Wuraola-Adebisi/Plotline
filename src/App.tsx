@@ -119,7 +119,8 @@ function Header() {
         <span>plotline</span>
       </Link>
       <nav>
-        <Link to="/plots" className="nav-link">Your plots</Link>\n        <Link to="/privacy" className="nav-link">Privacy</Link>
+        <Link to="/plots" className="nav-link">Your plots</Link>
+        <Link to="/privacy" className="nav-link">Privacy</Link>
         <Link to="/create" className="button button-dark button-small">
           <Plus size={16} /> New plot
         </Link>
@@ -132,7 +133,8 @@ function Footer() {
   return (
     <footer className="site-footer">
       <span>plotline / make the next chapter visible</span>
-      <span>Built for the things that do not fit in a checklist.</span>\n      <span className="footer-links"><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link></span>
+      <span>Built for the things that do not fit in a checklist.</span>
+      <span className="footer-links"><Link to="/privacy">Privacy</Link><Link to="/terms">Terms</Link></span>
     </footer>
   );
 }
@@ -180,7 +182,9 @@ function Home({ plots }: { plots: Plotline[] }) {
         </div>
       </section>
 
-      </section></ScrollReveal>\n\n      <ScrollReveal><section className="example-section">
+      </section></ScrollReveal>
+
+      <ScrollReveal><section className="example-section">
         <div className="example-head">
           <div>
             <div className="section-label">AN EXAMPLE</div>
@@ -193,7 +197,9 @@ function Home({ plots }: { plots: Plotline[] }) {
         <TimelinePreview plot={example} />
       </section>
 
-      </section></ScrollReveal>\n\n      <ScrollReveal><section className="dark-cta">
+      </section></ScrollReveal>
+
+      <ScrollReveal><section className="dark-cta">
         <div className="cta-scribble" aria-hidden="true">→</div>
         <div>
           <div className="section-label light">YOUR NEXT CHAPTER</div>
@@ -251,7 +257,8 @@ function LegalPage({ type }: { type: "privacy" | "terms" }) {
     </main>
   );
 }
-\nfunction CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
+
+function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -293,7 +300,8 @@ function LegalPage({ type }: { type: "privacy" | "terms" }) {
   };
 
   return (
-    <main className="create-page section-pad">\n      <Seo title="Create a plot — Plotline" description="Turn a chapter, goal, or major transition into a visual path." />
+    <main className="create-page section-pad">
+      <Seo title="Create a plot — Plotline" description="Turn a chapter, goal, or major transition into a visual path." />
       <div className="create-intro">
         <Link to="/" className="back-link"><ArrowLeft size={16} /> Back home</Link>
         <div className="eyebrow"><span>02</span> START WITH THE CHAPTER</div>
@@ -361,7 +369,8 @@ function LegalPage({ type }: { type: "privacy" | "terms" }) {
 
 function Plots({ plots }: { plots: Plotline[] }) {
   return (
-    <main className="plots-page section-pad">\n      <Seo title="Your plots — Plotline" description="See and continue the chapters you have mapped in Plotline." />
+    <main className="plots-page section-pad">
+      <Seo title="Your plots — Plotline" description="See and continue the chapters you have mapped in Plotline." />
       <div className="page-heading">
         <div>
           <div className="eyebrow"><span>03</span> YOUR CHAPTERS</div>
@@ -462,7 +471,8 @@ function PlotPage({
   };
 
   return (
-    <main className="plot-page">\n      <Seo title={`${plot?.title ?? "Plot"} — Plotline`} description={plot?.description || "A visual path for a chapter you are moving through."} />
+    <main className="plot-page">
+      <Seo title={`${plot?.title ?? "Plot"} — Plotline`} description={plot?.description || "A visual path for a chapter you are moving through."} />
       <section className="plot-intro">
         <div className="plot-intro-pattern" aria-hidden="true" />
         <div className="section-pad plot-intro-inner">
@@ -532,7 +542,8 @@ function PlotPage({
 
 function NotFound() {
   return (
-    <main className="not-found section-pad">\n      <Seo title="Page not found — Plotline" description="The Plotline page you requested does not exist." />
+    <main className="not-found section-pad">
+      <Seo title="Page not found — Plotline" description="The Plotline page you requested does not exist." />
       <div className="not-found-mark"><HomeIcon size={28} /></div>
       <div className="eyebrow"><span>404</span> WRONG TURN</div>
       <h1>This path <em>does not exist.</em></h1>
@@ -560,7 +571,9 @@ function App() {
         <Route path="/" element={<Home plots={plots} />} />
         <Route path="/create" element={<CreatePlot onCreate={createPlot} />} />
         <Route path="/plots" element={<Plots plots={plots} />} />
-        <Route path="/plot/:id" element={<PlotPage plots={plots} onUpdate={updatePlot} onDelete={deletePlot} />} />\n        <Route path="/privacy" element={<LegalPage type="privacy" />} />\n        <Route path="/terms" element={<LegalPage type="terms" />} />
+        <Route path="/plot/:id" element={<PlotPage plots={plots} onUpdate={updatePlot} onDelete={deletePlot} />} />
+        <Route path="/privacy" element={<LegalPage type="privacy" />} />
+        <Route path="/terms" element={<LegalPage type="terms" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
