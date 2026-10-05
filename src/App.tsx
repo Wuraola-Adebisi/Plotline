@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -99,7 +99,7 @@ function Seo({ title, description }: { title: string; description: string }) {
 
 function ScrollReveal({ children, className = "" }: { children: ReactNode; className?: string }) {
   const [visible, setVisible] = useState(false);
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!ref.current || typeof IntersectionObserver === "undefined") { setVisible(true); return; }
     const observer = new IntersectionObserver(([entry]) => {
