@@ -213,7 +213,7 @@ function Header() {
       </Link>
 
       <nav className="site-nav" aria-label="Main navigation">
-        <NavLink to="/plots" className="nav-link">Your plots</NavLink>
+        <NavLink to="/plots" className="nav-link"><span className="nav-prefix">Your </span>plots</NavLink>
         <Link to="/create" className="button button-dark button-small">
           <Plus size={16} /> New plot
         </Link>
@@ -722,7 +722,7 @@ function PlotPage({
           <button type="button" className="delete-link" onClick={deletePlot}><Trash2 size={15} /> Delete plot</button>
         </div>
 
-        <div className="big-progress" aria-label={`${progress}% complete`}>
+        <div className="big-progress" role="progressbar" aria-label="Chapter progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress}>
           <span style={{ width: `${progress}%` }} />
         </div>
 
