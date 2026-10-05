@@ -622,6 +622,15 @@ function PlotPage({
         </div>
 
         <div className="timeline">
+          <div className="timeline-path" aria-hidden="true">
+            {plot.milestones.map((milestone, index) => (
+              <span
+                key={`path-${milestone.id}`}
+                className={`timeline-path-segment ${milestone.status}`}
+                style={{ ["--path-progress" as string]: `${index < plot.milestones.length - 1 && milestone.status === "complete" ? 100 : index === plot.milestones.length - 1 && milestone.status === "complete" ? 100 : milestone.status === "current" ? 50 : 0}%` }}
+              />
+            ))}
+          </div>
           {plot.milestones.map((milestone, index) => (
             <div
               className={`timeline-item ${milestone.status} ${draggedId === milestone.id ? "is-dragging" : ""}`}
@@ -656,6 +665,7 @@ function PlotPage({
               <span className="timeline-line" aria-hidden="true" />
               <span className="timeline-marker">
                 {milestone.status === "complete" ? <Check size={20} /> : <Circle size={16} />}
+                {milestone.status === "current" && <span className="timeline-pulse" aria-hidden="true" />}
               </span>
               <span className="timeline-content">
                 <span className="timeline-index">0{index + 1} / {milestone.status}</span>
@@ -685,7 +695,10 @@ function PlotPage({
                 </button>
               </span>
               {milestone.status === "current" && (
-                <span className="current-action">Mark complete <ArrowRight size={15} /></span>
+                <span className="current-action"><span>YOU ARE HERE</span> Mark complete <ArrowRight size={15} /></span>
+              )}
+              {milestone.status === "complete" && index === plot.milestones.filter((item) => item.status === "complete").length - 1 && (
+                <span className="progress-note">PATH SO FAR</span>
               )}
             </div>
           ))}
