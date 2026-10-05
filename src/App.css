@@ -927,6 +927,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Journey path treatment */
 .timeline {
+  --milestone-count: 1;
   position:relative;
   padding-left:72px;
 }
@@ -943,7 +944,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .timeline-path-segment {
   position:relative;
   display:block;
-  height:calc((100% - 0px) / var(--milestone-count, 1));
+  height:calc(100% / var(--milestone-count));
   background:transparent;
 }
 .timeline-path-segment.complete {
