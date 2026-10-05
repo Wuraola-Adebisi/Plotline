@@ -144,6 +144,7 @@ function Home({ plots }: { plots: Plotline[] }) {
 
   return (
     <>
+      <Seo title="Plotline — See the path." description="Turn a big, messy chapter into a path you can actually move through." />
       <section className="hero">
         <div className="hero-pattern" aria-hidden="true" />
         <div className="hero-grid-mark" aria-hidden="true" />
@@ -152,63 +153,48 @@ function Home({ plots }: { plots: Plotline[] }) {
           <h1>Make the next<br /><em>chapter visible.</em></h1>
           <p>Turn a big, messy thing into a path you can actually move through.</p>
           <div className="hero-actions">
-            <Link to="/create" className="button button-dark">
-              Create a plot <ArrowRight size={18} />
-            </Link>
-            <Link to={`/plot/${example.id}`} className="text-link">
-              See an example <ArrowUpRight size={17} />
-            </Link>
+            <Link to="/create" className="button button-dark">Create a plot <ArrowRight size={18} /></Link>
+            <Link to={`/plot/${example.id}`} className="text-link">See an example <ArrowUpRight size={17} /></Link>
           </div>
         </div>
         <div className="hero-art" aria-hidden="true">
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <div className="hero-dot dot-one" />
-          <div className="hero-dot dot-two" />
+          <div className="orbit orbit-one" /><div className="orbit orbit-two" />
+          <div className="hero-dot dot-one" /><div className="hero-dot dot-two" />
           <div className="hero-sticker sticker-top">ONE STEP<br />AT A TIME</div>
           <div className="hero-sticker sticker-bottom">NO PERFECT<br />PLAN NEEDED</div>
           <div className="hero-number">01</div>
-          <div className="hero-cross cross-one">+</div>
-          <div className="hero-cross cross-two">+</div>
+          <div className="hero-cross cross-one">+</div><div className="hero-cross cross-two">+</div>
         </div>
         <div className="hero-side-note">CHAPTERS / PLANS / MOMENTS / MOVEMENT</div>
       </section>
 
-      <ScrollReveal><section className="statement section-pad">
-        <div className="section-label">WHY PLOTLINE</div>
-        <div className="statement-grid">
-          <h2>Not a calendar.<br /><span>Not a productivity dashboard.</span></h2>
-          <p>Plotline is for a specific chapter: moving, getting your first frontend job, launching a startup, planning a wedding, shipping a project. Give the chapter a shape, then follow it.</p>
-        </div>
-      </section>
-
-      </section></ScrollReveal>
-
-      <ScrollReveal><section className="example-section">
-        <div className="example-head">
-          <div>
-            <div className="section-label">AN EXAMPLE</div>
-            <h2>{example.title}</h2>
+      <ScrollReveal>
+        <section className="statement section-pad">
+          <div className="section-label">WHY PLOTLINE</div>
+          <div className="statement-grid">
+            <h2>Not a calendar.<br /><span>Not a productivity dashboard.</span></h2>
+            <p>Plotline is for a specific chapter: moving, getting your first frontend job, launching a startup, planning a wedding, shipping a project. Give the chapter a shape, then follow it.</p>
           </div>
-          <Link to={`/plot/${example.id}`} className="round-arrow" aria-label="Open example">
-            <ArrowUpRight size={21} />
-          </Link>
-        </div>
-        <TimelinePreview plot={example} />
-      </section>
+        </section>
+      </ScrollReveal>
 
-      </section></ScrollReveal>
+      <ScrollReveal>
+        <section className="example-section">
+          <div className="example-head">
+            <div><div className="section-label">AN EXAMPLE</div><h2>{example.title}</h2></div>
+            <Link to={`/plot/${example.id}`} className="round-arrow" aria-label="Open example"><ArrowUpRight size={21} /></Link>
+          </div>
+          <TimelinePreview plot={example} />
+        </section>
+      </ScrollReveal>
 
-      <ScrollReveal><section className="dark-cta">
-        <div className="cta-scribble" aria-hidden="true">→</div>
-        <div>
-          <div className="section-label light">YOUR NEXT CHAPTER</div>
-          <h2>Give it a beginning.<br /><em>Give it a path.</em></h2>
-        </div>
-        <Link to="/create" className="button button-light">
-          Start plotting <ArrowRight size={18} />
-        </Link>
-      </section>
+      <ScrollReveal>
+        <section className="dark-cta">
+          <div className="cta-scribble" aria-hidden="true">→</div>
+          <div><div className="section-label light">YOUR NEXT CHAPTER</div><h2>Give it a beginning.<br /><em>Give it a path.</em></h2></div>
+          <Link to="/create" className="button button-light">Start plotting <ArrowRight size={18} /></Link>
+        </section>
+      </ScrollReveal>
     </>
   );
 }
