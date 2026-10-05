@@ -141,70 +141,94 @@ function Footer() {
 
 function Home({ plots }: { plots: Plotline[] }) {
   const example = plots.find((plot) => plot.id === seedPlot.id) ?? plots[0] ?? seedPlot;
-  const useCases = [
-    ["01", "Moving somewhere", "From finding a place to finally feeling settled."],
-    ["02", "Getting the job", "From searching to interviews to your first day."],
-    ["03", "Launching something", "From the idea to the moment it is finally out there."],
-    ["04", "Planning a wedding", "From the big decision to the day itself."],
-    ["05", "Shipping a project", "From first thought to finished and live."],
-    ["06", "Starting a new chapter", "Whatever the chapter looks like for you."],
-  ];
+
   return (
     <>
-      <Seo title="Plotline — See the path." description="Plotline turns big chapters into visual paths of meaningful milestones." />
+      <Seo title="Plotline — See the path." description="Turn a big, messy chapter into a visual path of meaningful milestones." />
+
       <section className="hero">
-        <div className="hero-pattern" aria-hidden="true" /><div className="hero-grid-mark" aria-hidden="true" />
+        <div className="hero-pattern" aria-hidden="true" />
+        <div className="hero-grid-mark" aria-hidden="true" />
         <div className="hero-copy">
-          <div className="eyebrow hero-eyebrow"><span>01</span> A VISUAL PATH FOR BIG THINGS</div>
+          <div className="eyebrow hero-eyebrow"><span>01</span> SEE THE PATH</div>
           <h1>Make the next<br /><em>chapter visible.</em></h1>
-          <p>Turn something big and messy into a sequence of moments you can actually move through.</p>
-          <div className="hero-actions"><Link to="/create" className="button button-dark">Create a plot <ArrowRight size={18} /></Link><Link to={`/plot/${example.id}`} className="text-link">See an example <ArrowUpRight size={17} /></Link></div>
-        </div>
-        <div className="hero-art hero-product-art" aria-label="Example Plotline timeline">
-          <div className="product-art-label">A CHAPTER / MOVING TO LAGOS</div>
-          <div className="product-path"><div className="path-track"><span className="path-progress" /></div>
-            {["Decide", "Plan", "Move", "Settle"].map((item, index) => <div className={`path-step ${index === 2 ? "active" : index < 2 ? "done" : ""}`} key={item}><span className="path-dot">{index < 2 ? "✓" : index === 2 ? "YOU" : ""}</span><span>{item}</span></div>)}
+          <p>Turn a big thing into a clear path of moments, so you can see where you are and what comes next.</p>
+          <div className="hero-actions">
+            <Link to="/create" className="button button-dark">Create a plot <ArrowRight size={18} /></Link>
+            <Link to={`/plot/${example.id}`} className="text-link">See an example <ArrowUpRight size={17} /></Link>
           </div>
-          <div className="hero-sticker sticker-top">ONE CHAPTER<br />AT A TIME</div><div className="hero-sticker sticker-bottom">SEE WHERE<br />YOU ARE</div><div className="hero-number">01</div>
+        </div>
+        <div className="hero-art hero-product-art" aria-label="Plotline example showing a chapter and its milestones">
+          <div className="product-window">
+            <div className="product-window-top"><span>YOUR CHAPTER</span><strong>01 / 06</strong></div>
+            <div className="product-window-title">Moving to Lagos</div>
+            <div className="product-window-meta">6 milestones · 2 complete · 1 current</div>
+            <div className="product-window-path">
+              <span className="window-line" />
+              {["Find", "Inspect", "Deposit", "Keys", "Move", "Settled"].map((item, index) => (
+                <div className={`window-step ${index < 2 ? "done" : index === 2 ? "current" : ""}`} key={item}>
+                  <span className="window-dot">{index < 2 ? "✓" : ""}</span>
+                  <small>0{index + 1}</small>
+                  <strong>{item}</strong>
+                </div>
+              ))}
+            </div>
+            <div className="product-window-footer"><span>YOU ARE HERE</span><b>Inspect apartments</b><ArrowRight size={16} /></div>
+          </div>
+          <div className="hero-sticker sticker-top">ONE CHAPTER<br />AT A TIME</div>
+          <div className="hero-sticker sticker-bottom">SEE WHERE<br />YOU ARE</div>
         </div>
         <div className="hero-side-note">CHAPTERS / MILESTONES / MOVEMENT</div>
       </section>
 
-      <ScrollReveal><section className="what-section section-pad">
-        <div className="section-label">SO, WHAT IS PLOTLINE?</div>
-        <div className="what-grid"><h2>A timeline for <em>the things that are bigger than a task.</em></h2><div><p className="lead-copy">Plotline helps you take one major chapter of your life or work and turn it into a clear sequence of meaningful milestones.</p><p>You choose the chapter. You decide what the important moments are. Then Plotline gives you a visual path to move through and update as things change.</p></div></div>
-      </section></ScrollReveal>
+      <ScrollReveal>
+        <section className="manifesto section-pad">
+          <div className="section-label">02 / THE IDEA</div>
+          <h2>Some things are not tasks.<br /><em>They are chapters.</em></h2>
+          <div className="manifesto-bottom">
+            <p>A move. A new job. A launch. A wedding. A project. Plotline gives one of those big transitions a shape you can actually follow.</p>
+            <Link to="/create" className="text-link">Make one <ArrowRight size={16} /></Link>
+          </div>
+        </section>
+      </ScrollReveal>
 
-      <ScrollReveal><section className="how-section"><div className="section-pad">
-        <div className="section-label">HOW IT WORKS</div><div className="how-grid">
-          <article><span>01</span><h3>Name the chapter</h3><p>Give the big thing a name and a starting point. Moving, launching, changing jobs, planning.</p></article>
-          <article><span>02</span><h3>Plot the moments</h3><p>Add the milestones that matter. Not every tiny task. Just the moments that move the story forward.</p></article>
-          <article><span>03</span><h3>Move through it</h3><p>Mark where you are as the chapter unfolds. Your path changes with you.</p></article>
-        </div>
-      </div></section></ScrollReveal>
+      <ScrollReveal>
+        <section className="product-section">
+          <div className="section-pad product-heading">
+            <div className="section-label">03 / THE PRODUCT</div>
+            <div><h2>One chapter.<br /><em>One visible path.</em></h2><p>Everything important lives on the timeline.</p></div>
+          </div>
+          <div className="product-demo">
+            <div className="demo-sidebar"><span>THE CHAPTER</span><strong>{example.title}</strong><small>YOUR PLOT</small><div className="demo-stat"><b>06</b><span>milestones</span></div><div className="demo-stat"><b>02</b><span>complete</span></div></div>
+            <div className="demo-main"><TimelinePreview plot={example} /></div>
+          </div>
+        </section>
+      </ScrollReveal>
 
-      <ScrollReveal><section className="example-section">
-        <div className="example-head"><div><div className="section-label">SEE IT IN ACTION</div><h2>{example.title}</h2></div><Link to={`/plot/${example.id}`} className="round-arrow" aria-label="Open example"><ArrowUpRight size={21} /></Link></div>
-        <TimelinePreview plot={example} /><div className="example-caption"><span>YOU ARE NOT MANAGING A LIST.</span><strong>YOU ARE MOVING THROUGH A CHAPTER.</strong></div>
-      </section></ScrollReveal>
+      <ScrollReveal>
+        <section className="movement-section section-pad">
+          <div className="section-label">04 / KEEP MOVING</div>
+          <div className="movement-grid">
+            <div><span className="movement-number">01</span><h3>Upcoming</h3><p>What has not happened yet.</p></div>
+            <div className="movement-current"><span className="movement-number">02</span><h3>Current</h3><p>Where you are right now.</p></div>
+            <div><span className="movement-number">03</span><h3>Complete</h3><p>What you have already moved through.</p></div>
+          </div>
+        </section>
+      </ScrollReveal>
 
-      <ScrollReveal><section className="use-cases section-pad">
-        <div className="section-label">WHAT WOULD YOU USE IT FOR?</div><div className="use-case-grid">
-          {useCases.map(([number, title, description]) => <article key={number} className={`use-case-card card-${number}`}><span>{number}</span><h3>{title}</h3><p>{description}</p></article>)}
-        </div>
-      </section></ScrollReveal>
+      <ScrollReveal>
+        <section className="possibilities section-pad">
+          <div className="section-label">05 / FOR THE BIG THINGS</div>
+          <div className="possibilities-copy"><h2>Move house.<br />Get the job.<br />Ship the thing.<br /><em>Start somewhere new.</em></h2><p>Plotline works wherever the destination matters, but the path is still taking shape.</p></div>
+        </section>
+      </ScrollReveal>
 
-      <ScrollReveal><section className="contrast-section section-pad">
-        <div className="section-label">WHY NOT JUST USE A CHECKLIST?</div><div className="contrast-grid">
-          <div><span>CHECKLIST</span><h3>What do I need to do?</h3><p>Great for individual tasks and things you need to tick off.</p></div>
-          <div className="contrast-plotline"><span>PLOTLINE</span><h3>Where am I in this thing?</h3><p>Built around the shape of a chapter, with milestones that show how far you have moved.</p></div>
-        </div>
-      </section></ScrollReveal>
-
-      <ScrollReveal><section className="dark-cta">
-        <div className="cta-scribble" aria-hidden="true">→</div><div><div className="section-label light">YOUR NEXT CHAPTER</div><h2>You already know the chapter.<br /><em>Give it a path.</em></h2></div>
-        <Link to="/create" className="button button-light">Start plotting <ArrowRight size={18} /></Link>
-      </section></ScrollReveal>
+      <ScrollReveal>
+        <section className="dark-cta">
+          <div><div className="section-label light">06 / YOUR NEXT CHAPTER</div><h2>You already know the chapter.<br /><em>Give it a path.</em></h2></div>
+          <Link to="/create" className="button button-light">Start plotting <ArrowRight size={18} /></Link>
+        </section>
+      </ScrollReveal>
     </>
   );
 }
