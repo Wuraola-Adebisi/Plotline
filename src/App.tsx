@@ -18,8 +18,11 @@ import {
 import {
   BrowserRouter,
   Link,
+  Navigate,
+  NavLink,
   Route,
   Routes,
+  useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
@@ -118,19 +121,40 @@ const examplePlots: Plotline[] = [
 
 const seedPlot = examplePlots[1];
 
+function isPlot(value: unknown): value is Plotline {
+  if (!value || typeof value !== "object") return false;
+  const plot = value as Partial<Plotline>;
+  return (
+    typeof plot.id === "string" &&
+    typeof plot.title === "string" &&
+    typeof plot.startDate === "string" &&
+    Array.isArray(plot.milestones)
+  );
+}
+
 function loadPlots(): Plotline[] {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      const parsed: unknown = JSON.parse(saved);
+      if (Array.isArray(parsed)) return parsed.filter(isPlot);
+    }
   } catch {
     // Fall through to the seed plot.
   }
   return [seedPlot];
 }
 
+function todayISO() {
+  const now = new Date();
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
 function formatDate(date?: string) {
   if (!date) return "No date";
   const parsed = new Date(`${date}T12:00:00`);
+  if (Number.isNaN(parsed.getTime())) return "No date";
   return new Intl.DateTimeFormat("en", {
     month: "short",
     day: "numeric",
@@ -158,6 +182,14 @@ function Seo({ title, description }: { title: string; description: string }) {
   return null;
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+  return null;
+}
+
 function ScrollReveal({ children, className = "" }: { children: ReactNode; className?: string }) {
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -181,7 +213,7 @@ function Header() {
       </Link>
 
       <nav className="site-nav" aria-label="Main navigation">
-        <Link to="/plots" className="nav-link">Your plots</Link>
+        <NavLink to="/plots" className="nav-link">Your plots</NavLink>
         <Link to="/create" className="button button-dark button-small">
           <Plus size={16} /> New plot
         </Link>
@@ -232,7 +264,7 @@ function Home() {
   const activeExample = examplePlots[exampleIndex];
 
   return (
-    <>
+    <main>
       <Seo title="Plotline — See the path." description="Turn a big, messy chapter into a visual path of meaningful milestones." />
 
       <section className="hero">
@@ -253,7 +285,7 @@ function Home() {
             <div className="product-window-top"><span>EXAMPLE CHAPTER</span><strong>{String(exampleIndex + 1).padStart(2, "0")} / {String(examplePlots.length).padStart(2, "0")}</strong></div>
             <div className="product-window-title">{activeExample.title}</div>
             <div className="product-window-meta">{activeExample.milestones.length} milestones · {activeExample.milestones.filter((item) => item.status === "complete").length} complete · 1 current</div>
-            <div className="product-window-path">
+            <div className="product-window-path" style={{ ["--count" as string]: activeExample.milestones.length }}>
               <span className="window-line" />
               {activeExample.milestones.map((milestone, index) => (
                 <div className={`window-step ${milestone.status === "complete" ? "done" : milestone.status === "current" ? "current" : ""}`} key={milestone.id}>
@@ -334,7 +366,7 @@ function Home() {
                   key={example.id}
                   onClick={() => setExampleIndex(index)}
                 >
-                  <span>0{index + 1}</span>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <strong>{example.title}</strong>
                   <ArrowUpRight size={16} />
                 </button>
@@ -371,13 +403,13 @@ function Home() {
           <Link to="/create" className="button button-light">Start plotting <ArrowRight size={18} /></Link>
         </section>
       </ScrollReveal>
-    </>
+    </main>
   );
 }
 
 function TimelinePreview({ plot }: { plot: Plotline }) {
   return (
-    <div className="preview-timeline">
+    <div className="preview-timeline" style={{ ["--count" as string]: plot.milestones.length }}>
       {plot.milestones.map((milestone, index) => (
         <div className={`preview-node ${milestone.status}`} key={milestone.id}>
           <div className="node-marker">
@@ -424,7 +456,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
+  const [startDate, setStartDate] = useState(todayISO);
   const [milestones, setMilestones] = useState([
     { title: "", date: "", note: "" },
     { title: "", date: "", note: "" },
@@ -594,11 +626,13 @@ function PlotPage({
     return Math.round((plot.milestones.filter((item) => item.status === "complete").length / plot.milestones.length) * 100);
   }, [plot]);
 
-  useEffect(() => {
-    if (!plot) navigate("/plots", { replace: true });
-  }, [plot, navigate]);
+  if (!plot) return <Navigate to="/plots" replace />;
 
-  if (!plot) return null;
+  const completeCount = plot.milestones.filter((item) => item.status === "complete").length;
+  let lastCompleteIndex = -1;
+  plot.milestones.forEach((item, index) => {
+    if (item.status === "complete") lastCompleteIndex = index;
+  });
 
   const advanceMilestone = (milestoneId: string) => {
     const targetIndex = plot.milestones.findIndex((item) => item.id === milestoneId);
@@ -614,7 +648,8 @@ function PlotPage({
       next[targetIndex] = { ...target, status: "current" };
     } else if (target.status === "current") {
       next[targetIndex] = { ...target, status: "complete" };
-      const nextUpcoming = next.findIndex((item, index) => index > targetIndex && item.status === "upcoming");
+      let nextUpcoming = next.findIndex((item, index) => index > targetIndex && item.status === "upcoming");
+      if (nextUpcoming < 0) nextUpcoming = next.findIndex((item) => item.status === "upcoming");
       if (nextUpcoming >= 0) next[nextUpcoming] = { ...next[nextUpcoming], status: "current" };
     } else {
       next.forEach((item, index) => {
@@ -666,7 +701,7 @@ function PlotPage({
             <div>
               <div className="eyebrow"><span>CHAPTER</span> {formatDate(plot.startDate)}</div>
               <h1>{plot.title}</h1>
-              <p>{plot.description}</p>
+              {plot.description && <p>{plot.description}</p>}
             </div>
             <div className="progress-stamp">
               <span>PATH</span>
@@ -691,35 +726,13 @@ function PlotPage({
           <span style={{ width: `${progress}%` }} />
         </div>
 
-        <div className="timeline" style={{ ["--milestone-count" as string]: plot.milestones.length }}>
-          <div className="timeline-path" aria-hidden="true">
-            {plot.milestones.map((milestone, index) => (
-              <span
-                key={`path-${milestone.id}`}
-                className={`timeline-path-segment ${milestone.status}`}
-                style={{ ["--path-progress" as string]: `${index < plot.milestones.length - 1 && milestone.status === "complete" ? 100 : index === plot.milestones.length - 1 && milestone.status === "complete" ? 100 : milestone.status === "current" ? 50 : 0}%` }}
-              />
-            ))}
-          </div>
+        <ol className="timeline">
           {plot.milestones.map((milestone, index) => (
-            <div
-              className={`timeline-item ${milestone.status} ${draggedId === milestone.id ? "is-dragging" : ""}`}
+            <li
+              className={`timeline-row ${milestone.status} ${draggedId === milestone.id ? "is-dragging" : ""}`}
               key={milestone.id}
-              draggable
-              tabIndex={0}
-              onClick={() => advanceMilestone(milestone.id)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  advanceMilestone(milestone.id);
-                }
-              }}
-              onDragStart={(event) => {
-                setDraggedId(milestone.id);
-                event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("text/plain", milestone.id);
-              }}
               onDragOver={(event) => {
+                if (!draggedId) return;
                 event.preventDefault();
                 event.dataTransfer.dropEffect = "move";
               }}
@@ -729,50 +742,77 @@ function PlotPage({
                 if (fromId) reorderMilestone(fromId, milestone.id);
                 setDraggedId(null);
               }}
-              onDragEnd={() => setDraggedId(null)}
-              aria-label={`${milestone.title}, ${milestone.status}. Click to change status. Drag to reorder.`}
             >
-              <span className="timeline-line" aria-hidden="true" />
-              <span className="timeline-marker">
-                {milestone.status === "complete" ? <Check size={20} /> : <Circle size={16} />}
-                {milestone.status === "current" && <span className="timeline-pulse" aria-hidden="true" />}
-              </span>
-              <span className="timeline-content">
-                <span className="timeline-index">0{index + 1} / {milestone.status}</span>
-                <strong>{milestone.title}</strong>
-                <span className="timeline-date">{formatDate(milestone.date)}</span>
-                {milestone.note && <span className="timeline-note">{milestone.note}</span>}
-                <span className="timeline-hint"><GripVertical size={13} /> Drag to reorder</span>
-              </span>
-              <span className="timeline-controls" onClick={(event) => event.stopPropagation()}>
+              <div className="timeline-rail" aria-hidden="true">
+                <span className="timeline-marker">
+                  {milestone.status === "complete" ? <Check size={20} /> : <Circle size={16} />}
+                  {milestone.status === "current" && <span className="timeline-pulse" />}
+                </span>
+                {index < plot.milestones.length - 1 && (
+                  <span className={`timeline-connector ${milestone.status === "complete" ? "filled" : ""}`} />
+                )}
+              </div>
+
+              <div className="timeline-card">
                 <button
                   type="button"
-                  className="timeline-move"
-                  onClick={() => moveMilestone(milestone.id, -1)}
-                  disabled={index === 0}
-                  aria-label={`Move ${milestone.title} up`}
+                  className="timeline-main"
+                  onClick={() => advanceMilestone(milestone.id)}
+                  aria-label={`${milestone.title}, ${milestone.status}. Activate to change status.`}
                 >
-                  <ChevronUp size={15} />
+                  <span className="timeline-index">{String(index + 1).padStart(2, "0")} / {milestone.status}</span>
+                  <strong>{milestone.title}</strong>
+                  <span className="timeline-date">{formatDate(milestone.date)}</span>
+                  {milestone.note && <span className="timeline-note">{milestone.note}</span>}
+                  {milestone.status === "current" && (
+                    <span className="current-action"><span>YOU ARE HERE</span> Mark complete <ArrowRight size={15} /></span>
+                  )}
                 </button>
-                <button
-                  type="button"
-                  className="timeline-move"
-                  onClick={() => moveMilestone(milestone.id, 1)}
-                  disabled={index === plot.milestones.length - 1}
-                  aria-label={`Move ${milestone.title} down`}
-                >
-                  <ChevronDown size={15} />
-                </button>
-              </span>
-              {milestone.status === "current" && (
-                <span className="current-action"><span>YOU ARE HERE</span> Mark complete <ArrowRight size={15} /></span>
-              )}
-              {milestone.status === "complete" && index === plot.milestones.filter((item) => item.status === "complete").length - 1 && (
-                <span className="progress-note">PATH SO FAR</span>
-              )}
-            </div>
+
+                <div className="timeline-controls">
+                  <span
+                    className="timeline-handle"
+                    draggable
+                    aria-hidden="true"
+                    title="Drag to reorder"
+                    onDragStart={(event) => {
+                      const card = event.currentTarget.closest(".timeline-card");
+                      if (card) event.dataTransfer.setDragImage(card, 24, 24);
+                      setDraggedId(milestone.id);
+                      event.dataTransfer.effectAllowed = "move";
+                      event.dataTransfer.setData("text/plain", milestone.id);
+                    }}
+                    onDragEnd={() => setDraggedId(null)}
+                  >
+                    <GripVertical size={16} />
+                  </span>
+                  <button
+                    type="button"
+                    className="timeline-move"
+                    onClick={() => moveMilestone(milestone.id, -1)}
+                    disabled={index === 0}
+                    aria-label={`Move ${milestone.title} up`}
+                  >
+                    <ChevronUp size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    className="timeline-move"
+                    onClick={() => moveMilestone(milestone.id, 1)}
+                    disabled={index === plot.milestones.length - 1}
+                    aria-label={`Move ${milestone.title} down`}
+                  >
+                    <ChevronDown size={15} />
+                  </button>
+                </div>
+
+                {index === lastCompleteIndex && milestone.status === "complete" && completeCount > 0 && (
+                  <span className="progress-note">PATH SO FAR</span>
+                )}
+              </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
       </ScrollReveal>
       <ScrollReveal>
@@ -802,7 +842,11 @@ function App() {
   const [plots, setPlots] = useState<Plotline[]>(loadPlots);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(plots));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(plots));
+    } catch {
+      // Storage can be full or blocked (private mode). The app keeps working in memory.
+    }
   }, [plots]);
 
   const createPlot = (plot: Plotline) => setPlots((current) => [...current, plot]);
@@ -811,6 +855,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
