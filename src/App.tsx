@@ -11,6 +11,7 @@ import {
   ChevronUp,
   GripVertical,
   Home as HomeIcon,
+  Lock,
   Plus,
   Sparkles,
   Trash2,
@@ -187,8 +188,10 @@ const heroH1 =
   "font-display font-extrabold tracking-[-.065em] text-[length:clamp(54px,10vw,82px)] lg:text-[length:clamp(58px,7vw,104px)] leading-[.91]";
 const pageH1 =
   "font-display font-extrabold tracking-[-.06em] text-[52px] sm:text-[length:clamp(56px,8.6vw,120px)] leading-[.9]";
-const h2Big =
-  "font-display font-extrabold tracking-[-.065em] text-[length:clamp(48px,10vw,72px)] lg:text-[length:clamp(50px,6.4vw,92px)] leading-[.9]";
+const h2Section =
+  "font-display font-extrabold tracking-[-.05em] text-[length:clamp(36px,5.5vw,68px)] leading-[.98]";
+const leadText = "max-w-[56ch] text-lg leading-relaxed text-ink/75";
+const tileTitle = "font-display text-[28px] font-bold leading-[1.02] tracking-[-.04em]";
 const brandMark =
   "grid size-[30px] -rotate-[8deg] place-items-center border-2 border-ink bg-lime font-mono text-lg transition-transform duration-[250ms] group-hover:rotate-[8deg] group-hover:scale-105";
 const field =
@@ -310,6 +313,291 @@ function Footer() {
   );
 }
 
+function useInView<T extends HTMLElement>(threshold = 0.3) {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const node = ref.current;
+    if (!node || typeof IntersectionObserver === "undefined") { setInView(true); return; }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setInView(true); observer.disconnect(); }
+    }, { threshold });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [threshold]);
+  return [ref, inView] as const;
+}
+
+const moveChecklist = ["Find apartments", "Inspect apartments", "Pay deposit", "Get the keys", "Book movers", "Buy boxes", "Change address", "Set up internet"];
+const tickedItems = new Set(["Find apartments", "Buy boxes", "Set up internet"]);
+
+function ProblemSection() {
+  const [ref, inView] = useInView<HTMLDivElement>(0.35);
+  const move = examplePlots.find((plot) => plot.id === "moving-to-lagos") ?? examplePlots[0];
+  const current = move.milestones.find((item) => item.status === "current");
+
+  return (
+    <section className="bg-cream px-section py-[80px] md:py-[120px]" aria-labelledby="problem-heading">
+      <div className="grid gap-12 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] lg:gap-[6vw]">
+        <div className="self-start lg:sticky lg:top-[120px]">
+          <h2 id="problem-heading" className={cn(h2Section, "max-w-[14ch]")}>Big changes do not fit in a checklist.</h2>
+          <p className={cn(leadText, "mt-6")}>A checklist gives every item the same weight and says nothing about where you are. A chapter has moments, and some of them are already behind you.</p>
+          <Link to="/create" className={cn(btnDark, "mt-8")}>Plot a chapter <ArrowRight size={18} /></Link>
+        </div>
+
+        <div ref={ref} className="grid gap-5 sm:grid-cols-2">
+          <figure className="flex flex-col border-2 border-ink bg-paper">
+            <figcaption className="border-b-2 border-ink px-5 py-3 font-bold">As a checklist</figcaption>
+            <ul className="flex-1 divide-y divide-line px-5 py-1.5">
+              {moveChecklist.map((item) => {
+                const ticked = tickedItems.has(item);
+                return (
+                  <li className="flex items-center gap-3 py-2.5 text-[15px]" key={item}>
+                    <span className={cn("grid size-5 flex-none place-items-center border-2 border-ink", ticked && "bg-ink text-cream")}>{ticked && <Check size={13} />}</span>
+                    <span className={cn(ticked && "text-ink/50 line-through")}>{item}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="border-t-2 border-ink px-5 py-3.5 text-sm">Three of eight ticked. Which part of the move are you in?</p>
+          </figure>
+
+          <figure className="flex flex-col border-2 border-ink bg-lime">
+            <figcaption className="border-b-2 border-ink px-5 py-3 font-bold">As a path</figcaption>
+            <ol className="flex-1 px-5 py-5">
+              {move.milestones.map((milestone, index) => {
+                const last = index === move.milestones.length - 1;
+                const fill = milestone.status === "complete" ? "bg-orange text-cream" : milestone.status === "current" ? "bg-ink text-lime" : "bg-cream";
+                return (
+                  <li className="flex gap-4 pb-5 last:pb-0" key={milestone.id}>
+                    <span className="relative flex flex-col items-center">
+                      <span
+                        className={cn("z-[1] grid size-7 place-items-center rounded-full border-2 border-ink bg-cream transition-colors duration-500", inView && fill)}
+                        style={{ transitionDelay: `${index * 160}ms` }}
+                      >
+                        {milestone.status === "complete" && <Check size={14} />}
+                      </span>
+                      {!last && (
+                        <span
+                          className={cn("absolute top-7 -bottom-5 w-[3px] origin-top bg-ink transition-transform duration-500", inView ? "scale-y-100" : "scale-y-0")}
+                          style={{ transitionDelay: `${index * 160 + 120}ms` }}
+                        />
+                      )}
+                    </span>
+                    <span className="pt-0.5">
+                      <span className={cn("block text-[15px] font-semibold", milestone.status === "upcoming" && "text-ink/60")}>{milestone.title}</span>
+                      {milestone.status === "current" && <span className="mt-1 inline-block bg-ink px-1.5 py-0.5 text-xs text-lime">You are here</span>}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+            <p className="border-t-2 border-ink px-5 py-3.5 text-sm">Six moments, and you are at: {current?.title}.</p>
+          </figure>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HowItWorks() {
+  const sample = examplePlots.find((plot) => plot.id === "moving-to-lagos") ?? examplePlots[0];
+  const states = [
+    { label: "Complete", note: "You have moved through it", icon: <Check size={14} />, fill: "bg-orange text-cream" },
+    { label: "Current", note: "Where you are now", icon: null, fill: "bg-lime" },
+    { label: "Upcoming", note: "Still ahead", icon: null, fill: "bg-cream" },
+  ];
+  const stepShell = "flex flex-col border-2 border-ink bg-cream md:not-first:-ml-0.5";
+  const stepHead = "p-6 md:p-7";
+  const stepVisual = "mt-auto border-t-2 border-ink bg-paper p-6 md:p-7";
+  const stepTitle = "mt-5 font-display text-[26px] font-bold leading-[1.05] tracking-[-.04em]";
+
+  return (
+    <section className="border-y-2 border-ink bg-paper px-section py-[80px] md:py-[120px]" aria-labelledby="how-heading">
+      <div className="max-w-[760px]">
+        <h2 id="how-heading" className={h2Section}>Three steps from messy to clear</h2>
+        <p className={cn(leadText, "mt-5")}>A name, the moments that matter, and a tap to say where you are.</p>
+      </div>
+
+      <ol className="mt-14 grid gap-6 md:grid-cols-3 md:gap-0">
+        <li className={stepShell}>
+          <div className={stepHead}>
+            <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">1</span>
+            <h3 className={stepTitle}>Name the chapter</h3>
+            <p className="mt-3 text-ink/75">Give it a title and a starting date. A move, a launch, a new job.</p>
+          </div>
+          <div className={stepVisual}>
+            <span className="block text-xs text-ink/60">Chapter name</span>
+            <div className="border-b-2 border-line pb-2 font-display text-2xl font-bold tracking-[-.03em]">{sample.title}</div>
+            <div className="mt-3 flex items-center gap-2 text-sm text-ink/70"><CalendarDays size={16} /> Starting {formatDate(sample.startDate)}</div>
+          </div>
+        </li>
+
+        <li className={stepShell}>
+          <div className={stepHead}>
+            <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">2</span>
+            <h3 className={stepTitle}>Mark the moments</h3>
+            <p className="mt-3 text-ink/75">Add the milestones that matter. Skip the small tasks.</p>
+          </div>
+          <div className={stepVisual}>
+            <ul className="space-y-2">
+              {sample.milestones.slice(0, 3).map((milestone) => (
+                <li className="flex items-center justify-between gap-3 border border-line bg-cream px-3 py-2 text-sm" key={milestone.id}>
+                  <span className="font-medium">{milestone.title}</span>
+                  <span className="text-xs text-ink/60">{formatDate(milestone.date)}</span>
+                </li>
+              ))}
+              <li className="flex items-center gap-2 border border-dashed border-ink px-3 py-2 text-sm text-ink/60"><Plus size={14} /> Add another moment</li>
+            </ul>
+          </div>
+        </li>
+
+        <li className={stepShell}>
+          <div className={stepHead}>
+            <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">3</span>
+            <h3 className={stepTitle}>Move through it</h3>
+            <p className="mt-3 text-ink/75">Tap a milestone to set where you are. The path updates as you go.</p>
+          </div>
+          <div className={stepVisual}>
+            <ul className="space-y-3">
+              {states.map((state) => (
+                <li className="flex items-center gap-3" key={state.label}>
+                  <span className={cn("grid size-7 flex-none place-items-center rounded-full border-2 border-ink", state.fill)}>{state.icon}</span>
+                  <span className="text-sm"><b className="font-semibold">{state.label}</b> <span className="text-ink/65">{state.note}</span></span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      </ol>
+    </section>
+  );
+}
+
+function Features() {
+  const chip = "inline-flex items-center gap-1.5 border-2 border-ink px-3 py-1.5 text-sm font-semibold";
+  const dragRow = "flex items-center gap-2 border-2 border-ink bg-paper px-3 py-2 text-sm font-medium";
+
+  return (
+    <section className="bg-paper px-section py-[80px] md:py-[120px]" aria-labelledby="features-heading">
+      <div className="max-w-[760px]">
+        <h2 id="features-heading" className={h2Section}>What a plot gives you</h2>
+      </div>
+
+      <div className="mt-14 grid gap-5 md:grid-cols-6">
+        <article className="flex flex-col justify-between gap-10 border-2 border-ink bg-orange p-7 md:col-span-4 md:p-9">
+          <div>
+            <h3 className={tileTitle}>Know where you are</h3>
+            <p className="mt-3 max-w-[44ch]">Every milestone is upcoming, current or complete. One marks the place you are right now, and the path fills in behind it.</p>
+          </div>
+          <ul className="flex flex-wrap gap-2">
+            <li className={cn(chip, "bg-ink text-cream")}><Check size={15} /> Complete</li>
+            <li className={cn(chip, "bg-lime")}><span className="size-2.5 rounded-full bg-ink" /> Current</li>
+            <li className={cn(chip, "bg-cream")}><Circle size={14} /> Upcoming</li>
+          </ul>
+        </article>
+
+        <article className="flex flex-col justify-between gap-8 border-2 border-ink bg-cream p-7 md:col-span-2">
+          <div>
+            <h3 className={tileTitle}>Reorder when plans change</h3>
+            <p className="mt-3 text-ink/75">Drag a milestone or use the arrows.</p>
+          </div>
+          <div className="space-y-2" aria-hidden="true">
+            <div className={dragRow}><GripVertical size={16} /> Pay deposit</div>
+            <div className={cn(dragRow, "translate-x-3 -rotate-2 bg-lime shadow-[4px_4px_0_var(--color-ink)]")}><GripVertical size={16} /> Get the keys</div>
+            <div className={dragRow}><GripVertical size={16} /> Move in</div>
+          </div>
+        </article>
+
+        <article className="flex flex-col justify-between gap-8 border-2 border-ink bg-cream p-7 md:col-span-2">
+          <div>
+            <h3 className={tileTitle}>Not a straight line</h3>
+            <p className="mt-3 text-ink/75">Tap any milestone to make it current. Progress does not have to be linear.</p>
+          </div>
+          <div className="flex items-center gap-2" aria-hidden="true">
+            {[0, 1, 2, 3, 4].map((dot) => (
+              <span className={cn("size-6 rounded-full border-2 border-ink", dot < 2 && "bg-orange", dot === 3 && "size-8 bg-lime ring-4 ring-lime/40")} key={dot} />
+            ))}
+          </div>
+        </article>
+
+        <article className="flex flex-col justify-between gap-8 border-2 border-ink bg-blue p-7 text-cream md:col-span-2">
+          <div>
+            <h3 className={tileTitle}>Stays on your device</h3>
+            <p className="mt-3 text-cream/85">No account. Your plots are saved in your browser.</p>
+          </div>
+          <Lock size={30} aria-hidden="true" />
+        </article>
+
+        <article className="flex flex-col justify-between gap-8 border-2 border-ink bg-cream p-7 md:col-span-2">
+          <div>
+            <h3 className={tileTitle}>Dates and notes, if useful</h3>
+            <p className="mt-3 text-ink/75">Add either to a milestone, or leave them blank.</p>
+          </div>
+          <div className="border-2 border-ink bg-paper p-3 text-sm" aria-hidden="true">
+            <b className="font-semibold">Pay deposit</b>
+            <div className="mt-0.5 flex items-center gap-1.5 text-xs text-ink/60"><CalendarDays size={13} /> 18 Sep 2026</div>
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+const faqs = [
+  { q: "Do I need an account?", a: "No. Your plots are saved in your browser, so there is nothing to sign up for." },
+  { q: "Will my plots show up on my phone and my laptop?", a: "Not yet. A plot lives in the browser where you created it, so another browser or device starts empty. Clearing your browser data also removes your plots." },
+  { q: "How is this different from a to-do list?", a: "A to-do list holds tasks. A plot holds the moments of a chapter in order and shows which one you are in." },
+  { q: "How many milestones should I add?", a: "Think in moments, not every small task. The examples on this page use five or six." },
+  { q: "Do I have to finish them in order?", a: "No. Tap any milestone to make it current, and move milestones up or down when the plan changes." },
+  { q: "Are dates required?", a: "No. Dates and notes are optional on every milestone." },
+];
+
+function Faq() {
+  return (
+    <section className="bg-cream px-section py-[80px] md:py-[120px]" aria-labelledby="faq-heading">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] lg:gap-[6vw]">
+        <div className="self-start">
+          <h2 id="faq-heading" className={h2Section}>Common questions</h2>
+          <p className={cn(leadText, "mt-5")}>Short answers about how Plotline saves and shows your plots.</p>
+        </div>
+        <div>
+          {faqs.map((item) => (
+            <details className="group border-b-2 border-ink first:border-t-2" key={item.q}>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-semibold [&::-webkit-details-marker]:hidden">
+                {item.q}
+                <span className="grid size-8 flex-none place-items-center border-2 border-ink transition-transform duration-200 group-open:rotate-45 group-open:bg-lime"><Plus size={16} /></span>
+              </summary>
+              <p className="max-w-[60ch] pb-6 text-ink/75">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCta() {
+  return (
+    <section className="bg-smoke px-section py-[80px] text-cream md:py-[120px]" aria-labelledby="cta-heading">
+      <div className="flex items-center" aria-hidden="true">
+        {["bg-orange", "bg-orange", "bg-lime ring-4 ring-lime/30", "bg-transparent", "bg-transparent"].map((fill, index, all) => (
+          <div className="flex items-center" key={index}>
+            <span className={cn("size-7 rounded-full border-2 border-cream/80", fill)} />
+            {index < all.length - 1 && <span className={cn("h-[3px] w-10 sm:w-16 md:w-24", index < 2 ? "bg-orange" : "bg-cream/30")} />}
+          </div>
+        ))}
+      </div>
+      <h2 id="cta-heading" className="mt-10 max-w-[16ch] font-display text-[length:clamp(40px,6.5vw,92px)] font-extrabold tracking-[-.05em] leading-[.95]">You already know the chapter. Give it a path.</h2>
+      <p className="mt-6 max-w-[48ch] text-lg text-cream/75">Start with a name and a few milestones. You can reorder them whenever the plan changes.</p>
+      <div className="mt-9 flex flex-wrap items-center gap-6">
+        <Link to="/create" className={btnLight}>Start plotting <ArrowRight size={18} /></Link>
+        <Link to="/plots" className="font-semibold text-cream underline underline-offset-4 hover:text-lime">See your plots</Link>
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   const [exampleIndex, setExampleIndex] = useState(0);
   const activeExample = examplePlots[exampleIndex];
@@ -394,97 +682,47 @@ function Home() {
         <div className="absolute right-[clamp(20px,7vw,100px)] bottom-5 hidden font-mono text-[10px] tracking-[.1em] opacity-55 [writing-mode:vertical-rl] md:block">CHAPTERS / MILESTONES / MOVEMENT</div>
       </section>
 
-      <ScrollReveal>
-        <section className="bg-cream px-section py-[82px] md:py-[120px]">
-          <div className={sectionLabel}>02 / THE IDEA</div>
-          <h2 className={cn(h2Big, "mt-[42px] mb-[50px] max-w-[1050px] md:mt-[60px] md:mb-[70px] [&_em]:text-orange [&_em]:not-italic")}>Some things are not tasks.<br /><em>They are chapters.</em></h2>
-          <div className="flex flex-col items-start gap-6 border-t-2 border-ink pt-6 md:flex-row md:items-end md:justify-between md:gap-[50px]">
-            <p className="max-w-[530px] text-xl leading-normal">A move. A new job. A launch. A wedding. A project. Plotline gives one of those big transitions a shape you can actually follow.</p>
-            <Link to="/create" className={cn(textLink, "whitespace-nowrap")}>Make one <ArrowRight size={16} /></Link>
-          </div>
-        </section>
-      </ScrollReveal>
+      <ProblemSection />
+      <HowItWorks />
 
-      <ScrollReveal>
-        <section className="overflow-hidden border-y border-line bg-paper pt-[70px] pb-20 md:pt-[90px] md:pb-[110px]">
-          <div className="px-section mb-[55px] flex flex-col items-start gap-10 lg:flex-row lg:items-end lg:justify-between">
-            <div className={sectionLabel}>03 / THE PRODUCT</div>
-            <div>
-              <h2 className="mt-[18px] font-display text-[length:clamp(48px,5.5vw,78px)] leading-[.9] font-extrabold tracking-[-.07em] [&_em]:text-blue [&_em]:not-italic">One chapter.<br /><em>One visible path.</em></h2>
-              <p className="mt-3 max-w-[240px] text-[17px]">Everything important lives on the timeline. The chapter can be anything.</p>
-            </div>
+      <section id="demo" className="overflow-hidden border-b-2 border-ink bg-lime py-[80px] md:py-[120px]" aria-labelledby="demo-heading">
+        <div className="px-section mb-12 max-w-[760px]">
+          <h2 id="demo-heading" className={h2Section}>See a finished path</h2>
+          <p className={cn(leadText, "mt-5 text-ink/80")}>Pick a chapter and read it from left to right. Each one has a past, a present and a future.</p>
+        </div>
+        <div className="mx-auto grid w-[calc(100%_-_40px)] border-[3px] border-ink bg-cream shadow-[10px_10px_0_var(--color-ink)] md:grid-cols-[270px_minmax(0,1fr)] md:shadow-[14px_14px_0_var(--color-ink)] lg:w-[min(1200px,calc(100%_-_clamp(40px,14vw,200px)))]">
+          <div className="flex flex-col bg-smoke p-7 text-cream md:min-h-[390px]">
+            <span className="text-sm text-cream/60">Example chapter</span>
+            <strong className="mt-3 font-display text-[30px] leading-none font-bold tracking-[-.04em]">{activeExample.title}</strong>
+            <div className="mt-8 flex items-baseline gap-2 md:mt-auto"><b className="font-display text-[32px] font-bold">{pad(activeExample.milestones.length)}</b><span className="text-sm text-cream/60">milestones</span></div>
+            <div className="mt-3 flex items-baseline gap-2"><b className="font-display text-[32px] font-bold">{pad(activeComplete)}</b><span className="text-sm text-cream/60">complete</span></div>
           </div>
-          <div className="mx-auto grid w-[calc(100%_-_40px)] border-[3px] border-ink bg-cream shadow-[14px_14px_0_var(--color-ink)] md:grid-cols-[270px_minmax(0,1fr)] lg:w-[min(1200px,calc(100%_-_clamp(40px,14vw,200px)))]">
-            <div className="flex flex-col bg-smoke p-7 text-cream md:min-h-[390px]">
-              <span className="font-mono text-[10px] tracking-[.08em] opacity-55">EXAMPLE CHAPTER</span>
-              <strong className="mt-5 font-display text-[30px] leading-none font-bold tracking-[-.04em]">{activeExample.title}</strong>
-              <small className="mt-6 font-mono text-[10px] tracking-[.08em] opacity-55 md:mt-auto">NOT A TEMPLATE</small>
-              <div className="mt-[18px] flex items-baseline gap-2"><b className="font-display text-[32px] font-bold">{pad(activeExample.milestones.length)}</b><span className="font-mono text-[10px] opacity-55">milestones</span></div>
-              <div className="mt-[18px] flex items-baseline gap-2"><b className="font-display text-[32px] font-bold">{pad(activeComplete)}</b><span className="font-mono text-[10px] opacity-55">complete</span></div>
-            </div>
-            <div className="min-w-0 px-3.5 py-[25px] max-md:overflow-hidden md:px-[35px] md:py-10"><TimelinePreview plot={activeExample} /></div>
-          </div>
-          <div className="px-section pt-7 pb-12 md:pb-[70px]">
-            <span className="mb-2.5 block font-mono text-[9px] font-medium uppercase tracking-[.1em] opacity-50">A few things you could plot</span>
-            <div className="grid grid-cols-1 border-t border-l border-line sm:grid-cols-2 md:grid-cols-5">
-              {examplePlots.map((example, index) => (
-                <button
-                  type="button"
-                  className={cn(
-                    "grid min-h-[82px] grid-cols-[auto_1fr_auto] items-center gap-3 border-r border-b border-line px-4 py-3.5 text-left text-ink transition duration-[180ms] hover:-translate-y-[3px] hover:bg-lime",
-                    index === exampleIndex && "bg-lime",
-                  )}
-                  key={example.id}
-                  onClick={() => setExampleIndex(index)}
-                >
-                  <span className="self-start font-mono text-[9px] opacity-40">{pad(index + 1)}</span>
-                  <strong className="font-display text-base leading-[1.05] font-bold tracking-[-.035em]">{example.title}</strong>
-                  <ArrowUpRight size={16} />
-                </button>
-              ))}
-            </div>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <section className="bg-lime px-section py-[75px] md:py-[100px]">
-          <div className={sectionLabel}>04 / KEEP MOVING</div>
-          <div className="mt-[55px] grid border-y-[3px] border-ink md:grid-cols-3">
-            {[
-              { n: "01", title: "Upcoming", text: "What has not happened yet.", extra: "md:border-r-[3px] md:pr-[30px]" },
-              { n: "02", title: "Current", text: "Where you are right now.", extra: "bg-orange max-md:px-4 md:border-r-[3px] md:px-[30px]" },
-              { n: "03", title: "Complete", text: "What you have already moved through.", extra: "md:pl-[30px]" },
-            ].map((item) => (
-              <div key={item.n} className={cn("min-h-[190px] border-b-2 border-ink py-[22px] last:border-b-0 md:min-h-[260px] md:border-b-0 md:py-7", item.extra)}>
-                <span className="font-mono text-[11px] font-medium">{item.n}</span>
-                <h3 className="mt-10 mb-2.5 font-display text-[44px] leading-none font-extrabold tracking-[-.06em] md:mt-[70px]">{item.title}</h3>
-                <p className="max-w-[220px]">{item.text}</p>
-              </div>
+          <div className="min-w-0 px-3.5 py-[25px] max-md:overflow-hidden md:px-[35px] md:py-10"><TimelinePreview plot={activeExample} /></div>
+        </div>
+        <div className="px-section pt-10">
+          <div className="grid grid-cols-1 border-t-2 border-l-2 border-ink sm:grid-cols-2 md:grid-cols-5">
+            {examplePlots.map((example, index) => (
+              <button
+                type="button"
+                className={cn(
+                  "grid min-h-[82px] grid-cols-[1fr_auto] items-center gap-3 border-r-2 border-b-2 border-ink px-4 py-3.5 text-left text-ink transition-colors duration-200 hover:bg-cream",
+                  index === exampleIndex && "bg-ink text-cream hover:bg-ink",
+                )}
+                key={example.id}
+                onClick={() => setExampleIndex(index)}
+                aria-pressed={index === exampleIndex}
+              >
+                <strong className="font-display text-base leading-[1.05] font-bold tracking-[-.035em]">{example.title}</strong>
+                <ArrowUpRight size={16} />
+              </button>
             ))}
           </div>
-        </section>
-      </ScrollReveal>
+        </div>
+      </section>
 
-      <ScrollReveal>
-        <section className="bg-cream px-section py-[85px] md:py-[110px] lg:pb-[125px]">
-          <div className={sectionLabel}>05 / FOR THE BIG THINGS</div>
-          <div className="mt-[55px] grid items-end gap-[35px] md:grid-cols-[1.2fr_.55fr] md:gap-[8vw]">
-            <h2 className={cn(h2Big, "[&_em]:text-blue [&_em]:not-italic")}>Move house.<br />Get the job.<br />Ship the thing.<br /><em>Start somewhere new.</em></h2>
-            <p className="max-w-[330px] text-[19px] leading-normal">Plotline is not for one kind of goal. It is for the moments where the destination matters, but the path is still taking shape.</p>
-          </div>
-        </section>
-      </ScrollReveal>
-
-      <ScrollReveal>
-        <section className="relative flex flex-col items-start justify-between gap-10 overflow-hidden bg-smoke px-section py-[70px] text-cream md:flex-row md:items-center md:py-[105px]">
-          <div>
-            <div className={cn(sectionLabel, "text-cream/55")}>06 / YOUR NEXT CHAPTER</div>
-            <h2 className="mt-[15px] font-display text-[length:clamp(48px,6.5vw,90px)] leading-[.92] font-extrabold tracking-[-.065em] [&_em]:text-lime [&_em]:not-italic">You already know the chapter.<br /><em>Give it a path.</em></h2>
-          </div>
-          <Link to="/create" className={btnLight}>Start plotting <ArrowRight size={18} /></Link>
-        </section>
-      </ScrollReveal>
+      <Features />
+      <Faq />
+      <FinalCta />
     </main>
   );
 }
