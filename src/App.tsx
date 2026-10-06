@@ -579,8 +579,9 @@ function Home() {
     <main>
       <Seo title="Plotline — See the path." description="Turn a big, messy chapter into a visual path of meaningful milestones." />
 
-      <section className="border-b-2 border-ink bg-orange px-section py-[48px] md:py-[72px] lg:py-[88px]">
-        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-[5vw]">
+      <section className="relative overflow-hidden border-b-2 border-ink bg-orange px-section py-[48px] md:py-[72px] lg:py-[88px]">
+        <div className="pointer-events-none absolute inset-0 animate-pattern-drift bg-[radial-gradient(var(--color-ink)_1.3px,transparent_1.3px)] bg-[length:18px_18px] opacity-70 [mask-image:linear-gradient(90deg,black_0%,transparent_78%)]" aria-hidden="true" />
+        <div className="relative z-[1] grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-[5vw]">
           <div className="animate-rise-in">
             <h1 className={cn(heroH1, "max-w-[12ch]")}>Make the next chapter visible.</h1>
             <p className="mt-6 max-w-[46ch] text-lg leading-relaxed sm:text-xl">Turn a big change into a path of milestones, so you can see where you are and what comes next.</p>
