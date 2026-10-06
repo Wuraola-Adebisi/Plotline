@@ -1,31 +1,108 @@
-:root {
-  --ink: #171414;
-  --smoke: #100c0b;
-  --paper: #f6f0e7;
-  --cream: #fff9ef;
-  --orange: #ff4d00;
-  --lime: #d7f84a;
-  --blue: #4255ff;
-  --pink: #ff75b5;
-  --line: rgba(23, 20, 20, 0.18);
-  --sans: "Space Grotesk", system-ui, sans-serif;
-  --display: "Syne", "Space Grotesk", sans-serif;
-  --mono: "DM Mono", ui-monospace, monospace;
-  color: var(--ink);
-  background: var(--paper);
-  font: 16px/1.5 var(--sans);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+@import "tailwindcss";
+
+@theme static {
+  --color-ink: #171414;
+  --color-smoke: #100c0b;
+  --color-paper: #f6f0e7;
+  --color-cream: #fff9ef;
+  --color-orange: #ff4d00;
+  --color-lime: #d7f84a;
+  --color-blue: #4255ff;
+  --color-pink: #ff75b5;
+  --color-line: rgb(23 20 20 / 0.18);
+
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Syne", "Space Grotesk", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, monospace;
+
+  --animate-rise-in: rise-in 0.7s both cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-float-in: float-in 0.9s 0.1s both cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-node-in: node-in 0.5s both;
+  --animate-pattern-drift: pattern-drift 18s linear infinite;
+  --animate-pattern-drift-reverse: pattern-drift 18s linear infinite reverse;
+  --animate-bob: bob 4s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.2s ease-out infinite;
+
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float-in {
+    from { opacity: 0; transform: translateY(30px) rotate(2deg); }
+    to { opacity: 1; transform: translateY(0) rotate(0); }
+  }
+  @keyframes node-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pattern-drift {
+    from { background-position: 0 0; }
+    to { background-position: 72px 36px; }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+  }
+  @keyframes pulse-ring {
+    0%, 45% { opacity: 0.65; transform: scale(0.8); }
+    100% { opacity: 0; transform: scale(1.25); }
+  }
 }
 
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--paper); overflow-x: hidden; }
-h1, h2, h3 { overflow-wrap: break-word; }button, input, textarea { font: inherit; }
-button, a { -webkit-tap-highlight-color: transparent; }
-button { cursor: pointer; }
-button:disabled { cursor: not-allowed; }
-a { color: inherit; }
-::selection { background: var(--lime); color: var(--ink); }
-:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+/* Horizontal padding shared by full-width sections and the header/footer bars. */
+@utility px-section {
+  padding-inline: clamp(20px, 7vw, 100px);
+}
+@utility px-bar {
+  padding-inline: clamp(20px, 5vw, 72px);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font: 16px/1.5 var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  #root {
+    min-height: 100vh;
+    overflow-x: clip;
+  }
+  h1, h2, h3 {
+    overflow-wrap: break-word;
+  }
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-blue);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
