@@ -178,7 +178,7 @@ const btn =
 const btnDark = cn(btn, "bg-ink text-cream");
 const btnLight = cn(btn, "border-lime bg-lime text-ink");
 const heroH1 =
-  "font-display font-extrabold tracking-[-.055em] text-[length:clamp(46px,8vw,96px)] leading-[.94]";
+  "font-display font-extrabold tracking-[-.055em] text-[length:clamp(46px,8vw,96px)] lg:text-[length:clamp(52px,5vw,96px)] leading-[.94]";
 const pageH1 =
   "font-display font-extrabold tracking-[-.05em] text-[length:clamp(40px,6.5vw,84px)] leading-[.96]";
 const h2Section =
@@ -299,14 +299,14 @@ function ProblemSection() {
 
   return (
     <section className="bg-cream px-section py-[80px] md:py-[120px]" aria-labelledby="problem-heading">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] lg:gap-[6vw]">
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] lg:gap-[6vw]">
         <div className="self-start lg:sticky lg:top-[120px]">
           <h2 id="problem-heading" className={cn(h2Section, "max-w-[14ch]")}>Big changes do not fit in a checklist.</h2>
           <p className={cn(leadText, "mt-6")}>A checklist gives every item the same weight and says nothing about where you are. A chapter has moments, and some of them are already behind you.</p>
           <Link to="/create" className={cn(btnDark, "mt-8")}>Plot a chapter <ArrowRight size={18} /></Link>
         </div>
 
-        <div ref={ref} className="grid gap-5 sm:grid-cols-2">
+        <div ref={ref} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <figure className="flex flex-col border-2 border-ink bg-paper">
             <figcaption className="border-b-2 border-ink px-5 py-3 font-bold">As a checklist</figcaption>
             <ul className="flex-1 divide-y divide-line px-5 py-1.5">
@@ -380,7 +380,7 @@ function HowItWorks() {
         <p className={cn(leadText, "mt-5")}>A name, the moments that matter, and a tap to say where you are.</p>
       </div>
 
-      <ol className="mt-14 grid gap-6 md:grid-cols-3 md:gap-0">
+      <ol className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0">
         <li className={stepShell}>
           <div className={stepHead}>
             <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">1</span>
@@ -424,7 +424,7 @@ function HowItWorks() {
               {states.map((state) => (
                 <li className="flex items-center gap-3" key={state.label}>
                   <span className={cn("grid size-7 flex-none place-items-center rounded-full border-2 border-ink", state.fill)}>{state.icon}</span>
-                  <span className="text-sm"><b className="font-semibold">{state.label}</b> <span className="text-ink/65">{state.note}</span></span>
+                  <span className="flex flex-col text-sm"><b className="font-semibold">{state.label}</b><span className="text-ink/65">{state.note}</span></span>
                 </li>
               ))}
             </ul>
@@ -445,7 +445,7 @@ function Features() {
         <h2 id="features-heading" className={h2Section}>What a plot gives you</h2>
       </div>
 
-      <div className="mt-14 grid gap-5 md:grid-cols-6">
+      <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-6">
         <article className="flex flex-col justify-between gap-10 border-2 border-ink bg-orange p-7 md:col-span-4 md:p-9">
           <div>
             <h3 className={tileTitle}>Know where you are</h3>
@@ -461,7 +461,7 @@ function Features() {
         <article className="flex flex-col justify-between gap-8 border-2 border-ink bg-cream p-7 md:col-span-2">
           <div>
             <h3 className={tileTitle}>Reorder when plans change</h3>
-            <p className="mt-3 text-ink/75">Drag a milestone or use the arrows.</p>
+            <p className="mt-3 text-ink/75">Move a milestone up or down with the arrows, or drag it on a computer.</p>
           </div>
           <div className="space-y-2" aria-hidden="true">
             <div className={dragRow}><GripVertical size={16} /> Pay deposit</div>
@@ -517,7 +517,7 @@ const faqs = [
 function Faq() {
   return (
     <section className="bg-cream px-section py-[80px] md:py-[120px]" aria-labelledby="faq-heading">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] lg:gap-[6vw]">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] lg:gap-[6vw]">
         <div className="self-start">
           <h2 id="faq-heading" className={h2Section}>Common questions</h2>
           <p className={cn(leadText, "mt-5")}>Short answers about how Plotline saves and shows your plots.</p>
@@ -541,11 +541,11 @@ function Faq() {
 function FinalCta() {
   return (
     <section className="bg-smoke px-section py-[80px] text-cream md:py-[120px]" aria-labelledby="cta-heading">
-      <div className="flex items-center" aria-hidden="true">
+      <div className="flex w-full max-w-[560px] items-center" aria-hidden="true">
         {["bg-orange", "bg-orange", "bg-lime ring-4 ring-lime/30", "bg-transparent", "bg-transparent"].map((fill, index, all) => (
-          <div className="flex items-center" key={index}>
-            <span className={cn("size-7 rounded-full border-2 border-cream/80", fill)} />
-            {index < all.length - 1 && <span className={cn("h-[3px] w-10 sm:w-16 md:w-24", index < 2 ? "bg-orange" : "bg-cream/30")} />}
+          <div className={cn("flex items-center", index < all.length - 1 && "flex-1")} key={index}>
+            <span className={cn("size-7 flex-none rounded-full border-2 border-cream/80", fill)} />
+            {index < all.length - 1 && <span className={cn("h-[3px] flex-1", index < 2 ? "bg-orange" : "bg-cream/30")} />}
           </div>
         ))}
       </div>
@@ -581,9 +581,9 @@ function Home() {
 
       <section className="relative overflow-hidden border-b-2 border-ink bg-orange px-section py-[48px] md:py-[72px] lg:py-[88px]">
         <div className="pointer-events-none absolute inset-0 animate-pattern-drift bg-[radial-gradient(var(--color-ink)_1.3px,transparent_1.3px)] bg-[length:18px_18px] opacity-70 [mask-image:linear-gradient(90deg,black_0%,transparent_78%)]" aria-hidden="true" />
-        <div className="relative z-[1] grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-[5vw]">
+        <div className="relative z-[1] grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-[5vw]">
           <div className="animate-rise-in">
-            <h1 className={cn(heroH1, "max-w-[12ch]")}>Make the next chapter visible.</h1>
+            <h1 className={cn(heroH1, "text-balance")}>Make the next chapter visible.</h1>
             <p className="mt-6 max-w-[46ch] text-lg leading-relaxed sm:text-xl">Turn a big change into a path of milestones, so you can see where you are and what comes next.</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
               <Link to="/create" className={btnDark}>Create a plot <ArrowRight size={18} /></Link>
@@ -592,7 +592,7 @@ function Home() {
           </div>
 
           <div className="animate-float-in border-[3px] border-ink bg-cream shadow-[8px_8px_0_var(--color-ink)] sm:shadow-[12px_12px_0_var(--color-ink)]" aria-label={`Interactive example: ${activeExample.title}`}>
-            <div className="flex gap-1.5 overflow-x-auto border-b-2 border-ink bg-paper p-2.5 [scrollbar-width:thin]" role="group" aria-label="Choose an example chapter">
+            <div className="flex gap-1.5 overflow-x-auto border-b-2 border-ink bg-paper p-2.5 [scrollbar-width:thin] sm:flex-wrap sm:overflow-x-visible" role="group" aria-label="Choose an example chapter">
               {examplePlots.map((example, index) => (
                 <button
                   type="button"
@@ -625,7 +625,7 @@ function Home() {
                         aria-label={`Set ${milestone.title} as current`}
                         aria-current={milestone.status === "current" ? "step" : undefined}
                       >
-                        <span className="relative flex flex-col items-center">
+                        <span className="relative flex flex-col items-center self-stretch">
                           <span
                             className={cn(
                               "z-[1] grid size-7 flex-none place-items-center rounded-full border-2 border-ink bg-cream text-xs font-bold transition-colors duration-200 group-hover:bg-lime",
@@ -637,7 +637,7 @@ function Home() {
                           </span>
                           {!last && <span className={cn("absolute top-7 -bottom-3 w-[3px] bg-ink/15", milestone.status === "complete" && "bg-orange")} />}
                         </span>
-                        <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-4 pt-0.5">
+                        <span className="flex min-w-0 flex-1 flex-col pb-1.5 pt-0.5 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-x-4">
                           <span className={cn("font-semibold", milestone.status === "upcoming" && "text-ink/60")}>{milestone.title}</span>
                           <span className="text-sm text-ink/60">{formatDate(milestone.date)}</span>
                         </span>
@@ -661,7 +661,7 @@ function Home() {
           <h2 id="demo-heading" className={h2Section}>See a finished path</h2>
           <p className={cn(leadText, "mt-5 text-ink/80")}>Pick a chapter and read it from left to right. Each one has a past, a present and a future.</p>
         </div>
-        <div className="mx-auto grid w-[calc(100%_-_40px)] border-[3px] border-ink bg-cream shadow-[10px_10px_0_var(--color-ink)] md:grid-cols-[270px_minmax(0,1fr)] md:shadow-[14px_14px_0_var(--color-ink)] lg:w-[min(1200px,calc(100%_-_clamp(40px,14vw,200px)))]">
+        <div className="mx-auto grid w-[calc(100%_-_40px)] grid-cols-1 border-[3px] border-ink bg-cream shadow-[10px_10px_0_var(--color-ink)] md:grid-cols-[270px_minmax(0,1fr)] md:shadow-[14px_14px_0_var(--color-ink)] lg:w-[min(1200px,calc(100%_-_clamp(40px,14vw,200px)))]">
           <div className="flex flex-col bg-smoke p-7 text-cream md:min-h-[390px]">
             <span className="text-sm text-cream/60">Example chapter</span>
             <strong className="mt-3 font-display text-[30px] leading-none font-bold tracking-[-.04em]">{activeExample.title}</strong>
@@ -701,7 +701,7 @@ function Home() {
 function TimelinePreview({ plot }: { plot: Plotline }) {
   return (
     <div
-      className="relative grid min-h-[300px] grid-cols-[repeat(var(--count),minmax(0,1fr))] items-start before:absolute before:top-[27px] before:right-[calc(100%_/_var(--count)_-_27px)] before:left-[27px] before:h-[3px] before:bg-ink before:content-[''] max-md:flex max-md:flex-col max-md:before:top-[25px] max-md:before:right-auto max-md:before:bottom-[25px] max-md:before:left-[25px] max-md:before:h-auto max-md:before:w-[3px]"
+      className="relative grid min-h-[300px] grid-cols-[repeat(var(--count),minmax(0,1fr))] items-start before:absolute before:top-[27px] before:right-[calc(100%_/_var(--count)_-_27px)] before:left-[27px] before:h-[3px] before:bg-ink before:content-[''] max-md:flex max-md:flex-col max-md:before:hidden"
       style={{ ["--count" as string]: plot.milestones.length }}
     >
       {plot.milestones.map((milestone, index) => (
@@ -710,6 +710,7 @@ function TimelinePreview({ plot }: { plot: Plotline }) {
           style={{ animationDelay: `${index * 0.08}s` }}
           key={milestone.id}
         >
+          {index < plot.milestones.length - 1 && <span className="absolute top-[54px] bottom-0 left-[25.5px] w-[3px] bg-ink md:hidden" aria-hidden="true" />}
           <div
             className={cn(
               "grid size-[54px] place-items-center border-[3px] border-ink bg-paper font-mono text-xs transition duration-200 group-hover:-translate-y-[5px] group-hover:rotate-6",
@@ -766,7 +767,7 @@ function LegalPage({ type }: { type: "privacy" | "terms" }) {
       <h1 className={cn(pageH1, "mt-8")}>{doc.title}</h1>
       <p className="mt-4 text-sm text-ink/65">Last updated October 5, 2026</p>
 
-      <div className="mt-12 grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-[6vw]">
+      <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-[6vw]">
         <nav className="self-start border-2 border-ink bg-cream p-5 lg:sticky lg:top-[100px]" aria-label="On this page">
           <h2 className="text-sm font-semibold text-ink/65">On this page</h2>
           <ul className="mt-3 space-y-2">
@@ -833,6 +834,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
     { title: "", date: "", note: "" },
   ]);
 
+  const finePointer = Boolean(window.matchMedia?.("(pointer: fine)").matches);
   const filledCount = milestones.filter((item) => item.title.trim()).length;
   const canCreate = Boolean(title.trim() && filledCount > 0);
 
@@ -874,12 +876,12 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
         <p className={cn(leadText, "mt-5")}>A chapter can be practical, personal or ambitious. Name it, then add the moments that matter.</p>
       </div>
 
-      <div className="mt-12 grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,.7fr)] lg:gap-[5vw]">
+      <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,.7fr)] lg:gap-[5vw]">
         <div>
-          <div className="grid gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <label className="block">
               <span className={labelText}>Chapter name</span>
-              <input autoFocus className={cn(field, "text-xl font-semibold")} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Launch my first product" />
+              <input autoFocus={finePointer} className={cn(field, "text-base font-semibold sm:text-xl")} value={title} onChange={(event) => setTitle(event.target.value)} placeholder="e.g. Launch my first product" />
             </label>
             <label className="block">
               <span className={labelText}>Description <span className="font-normal text-ink/60">(optional)</span></span>
@@ -901,30 +903,33 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
             <ol className="mt-6 space-y-4">
               {milestones.map((milestone, index) => (
                 <li className="animate-rise-in border-2 border-ink bg-paper p-4 sm:p-5" key={index}>
-                  <div className="flex items-start gap-3">
-                    <span className="grid size-10 flex-none place-items-center bg-ink font-display font-bold text-cream">{index + 1}</span>
-                    <div className="min-w-0 flex-1">
-                      <input
-                        className={cn(field, "font-semibold")}
-                        value={milestone.title}
-                        onChange={(event) => updateMilestone(index, "title", event.target.value)}
-                        placeholder={index === 0 ? "First meaningful step" : "Next meaningful step"}
-                        aria-label={`Milestone ${index + 1} title`}
-                      />
-                      <div className="mt-3 grid gap-3 sm:grid-cols-[180px_minmax(0,1fr)]">
-                        <input className={dateInput} type="date" value={milestone.date} onChange={(event) => updateMilestone(index, "date", event.target.value)} aria-label={`Milestone ${index + 1} date`} />
-                        <input className={field} value={milestone.note} onChange={(event) => updateMilestone(index, "note", event.target.value)} placeholder="A note, if useful" aria-label={`Milestone ${index + 1} note`} />
-                      </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="grid size-8 flex-none place-items-center bg-ink font-display font-bold text-cream">{index + 1}</span>
+                      <span className="text-sm font-semibold">Milestone {index + 1}</span>
                     </div>
                     <button
                       type="button"
-                      className="grid size-10 flex-none place-items-center border-2 border-ink bg-cream enabled:hover:bg-pink disabled:opacity-40"
+                      className="grid size-9 flex-none place-items-center border-2 border-ink bg-cream enabled:hover:bg-pink disabled:opacity-40"
                       onClick={() => removeMilestone(index)}
                       aria-label={`Remove milestone ${index + 1}`}
                       disabled={milestones.length <= 2}
                     >
-                      <Trash2 size={17} />
+                      <Trash2 size={16} />
                     </button>
+                  </div>
+                  <div className="mt-4 grid grid-cols-1 gap-3">
+                    <input
+                      className={cn(field, "font-semibold")}
+                      value={milestone.title}
+                      onChange={(event) => updateMilestone(index, "title", event.target.value)}
+                      placeholder={index === 0 ? "First meaningful step" : "Next meaningful step"}
+                      aria-label={`Milestone ${index + 1} title`}
+                    />
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-[190px_minmax(0,1fr)]">
+                      <input className={dateInput} type="date" value={milestone.date} onChange={(event) => updateMilestone(index, "date", event.target.value)} aria-label={`Milestone ${index + 1} date`} />
+                      <input className={field} value={milestone.note} onChange={(event) => updateMilestone(index, "note", event.target.value)} placeholder="A note, if useful" aria-label={`Milestone ${index + 1} note`} />
+                    </div>
                   </div>
                 </li>
               ))}
@@ -935,6 +940,10 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
             </button>
           </div>
 
+          <div className="mt-10 lg:hidden">
+            <PathPreview title={title} steps={milestones} />
+          </div>
+
           <div className="mt-10 flex flex-col items-start gap-3 border-t-2 border-ink pt-6 sm:flex-row sm:items-center sm:gap-5">
             <button type="button" className={cn(btnDark, "max-sm:w-full")} disabled={!canCreate} onClick={create}>
               Create plot <ArrowRight size={18} />
@@ -943,7 +952,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
           </div>
         </div>
 
-        <aside className="lg:sticky lg:top-[100px] lg:self-start" aria-label="Live preview of your path">
+        <aside className="hidden lg:sticky lg:top-[100px] lg:block lg:self-start" aria-label="Live preview of your path">
           <PathPreview title={title} steps={milestones} />
         </aside>
       </div>
@@ -1001,7 +1010,7 @@ function Plots({ plots }: { plots: Plotline[] }) {
           <Link to="/create" className={btnDark}>Create your first plot <ArrowRight size={18} /></Link>
         </div>
       ) : (
-        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
           {plots.map((plot) => {
             const complete = plot.milestones.filter((item) => item.status === "complete").length;
             const total = plot.milestones.length;
@@ -1126,7 +1135,7 @@ function PlotPage({
       <section className="border-b-2 border-ink bg-orange">
         <div className="px-section py-10 md:py-[60px]">
           <Link to="/plots" className={backLink}><ArrowLeft size={16} /> All plots</Link>
-          <div className="mt-10 grid items-end gap-10 md:grid-cols-[minmax(0,1fr)_auto]">
+          <div className="mt-10 grid grid-cols-1 items-end gap-10 md:grid-cols-[minmax(0,1fr)_auto]">
             <div>
               <p className="text-sm font-semibold">Started {formatDate(plot.startDate)}</p>
               <h1 className={cn(heroH1, "mt-3 max-w-[16ch]")}>{plot.title}</h1>
@@ -1145,7 +1154,7 @@ function PlotPage({
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 id="path-heading" className="font-display text-[length:clamp(30px,4vw,48px)] leading-none font-extrabold tracking-[-.05em]">The path</h2>
-              <p className="mt-2 text-ink/70">Select a milestone to change where you are. Use the arrows or drag the handle to reorder.</p>
+              <p className="mt-2 text-ink/70">Select a milestone to change where you are. Use the arrows to reorder, or drag the handle on a computer.</p>
             </div>
             <button type="button" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/60 hover:text-[#b00020]" onClick={deletePlot}><Trash2 size={15} /> Delete plot</button>
           </div>
@@ -1234,9 +1243,7 @@ function PlotPage({
                       <span className="text-sm">{formatDate(milestone.date)}</span>
                       {milestone.note && <span className="text-sm text-ink/70">{milestone.note}</span>}
                       {status === "current" && (
-                        <span className="mt-3 flex items-center gap-2 text-sm font-semibold">
-                          <span className="bg-blue px-2 py-1 text-xs text-cream">You are here</span> Mark complete <ArrowRight size={15} />
-                        </span>
+                        <span className="mt-3 flex items-center gap-2 text-sm font-semibold">Mark complete <ArrowRight size={15} /></span>
                       )}
                     </button>
 

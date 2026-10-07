@@ -54,7 +54,7 @@
   padding-inline: clamp(20px, 7vw, 100px);
 }
 @utility px-bar {
-  padding-inline: clamp(20px, 5vw, 72px);
+  padding-inline: clamp(20px, 7vw, 100px);
 }
 
 @layer base {
