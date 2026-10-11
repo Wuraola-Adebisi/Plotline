@@ -12,6 +12,7 @@ import {
   GripVertical,
   Lock,
   Plus,
+  Sparkles,
   Trash2,
 } from "lucide-react";
 import {
@@ -390,29 +391,29 @@ function HowItWorks() {
   return (
     <section id="how" className="scroll-mt-[76px] border-y-2 border-ink bg-paper px-section py-[80px] md:py-[120px]" aria-labelledby="how-heading">
       <div className="max-w-[760px]">
-        <h2 id="how-heading" className={h2Section}>Three steps from messy to clear</h2>
-        <p className={cn(leadText, "mt-5")}>A name, the moments that matter, and a tap to say where you are.</p>
+        <h2 id="how-heading" className={h2Section}>From a rough idea to a clear path</h2>
+        <p className={cn(leadText, "mt-5")}>Describe the chapter, edit the plan, and tap to say where you are.</p>
       </div>
 
       <ol className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0">
         <li className={stepShell}>
           <div className={stepHead}>
             <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">1</span>
-            <h3 className={stepTitle}>Name the chapter</h3>
-            <p className="mt-3 text-ink/75">Give it a title and a starting date. A move, a launch, a new job.</p>
+            <h3 className={stepTitle}>Describe the chapter</h3>
+            <p className="mt-3 text-ink/75">Write what you are about to do. A move, a launch, a new job. Plotline AI drafts the plan.</p>
           </div>
           <div className={stepVisual}>
-            <span className="block text-xs text-ink/60">Chapter name</span>
-            <div className="border-b-2 border-line pb-2 font-display text-2xl font-bold tracking-[-.03em]">{sample.title}</div>
-            <div className="mt-3 flex items-center gap-2 text-sm text-ink/70"><CalendarDays size={16} /> Starting {formatDate(sample.startDate)}</div>
+            <span className="block text-xs text-ink/60">Your description</span>
+            <div className="border-b-2 border-line pb-2 text-[15px] leading-snug">I am moving to Lagos in September and need a place sorted before I go.</div>
+            <div className="mt-3 inline-flex items-center gap-2 bg-ink px-3 py-1.5 text-sm font-semibold text-cream"><Sparkles size={14} aria-hidden="true" /> Build my plot</div>
           </div>
         </li>
 
         <li className={stepShell}>
           <div className={stepHead}>
             <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">2</span>
-            <h3 className={stepTitle}>Mark the moments</h3>
-            <p className="mt-3 text-ink/75">Add the milestones that matter. Skip the small tasks.</p>
+            <h3 className={stepTitle}>Shape the milestones</h3>
+            <p className="mt-3 text-ink/75">Edit, reorder or delete what it proposes, or add your own. Skip the small tasks.</p>
           </div>
           <div className={stepVisual}>
             <ul className="space-y-2">
@@ -431,7 +432,7 @@ function HowItWorks() {
           <div className={stepHead}>
             <span className="grid size-9 place-items-center bg-ink font-display text-lg font-bold text-cream">3</span>
             <h3 className={stepTitle}>Move through it</h3>
-            <p className="mt-3 text-ink/75">Tap a milestone to set where you are. The path updates as you go.</p>
+            <p className="mt-3 text-ink/75">Tap a milestone to set where you are. When plans change, describe the change and Plotline AI reworks what is left.</p>
           </div>
           <div className={stepVisual}>
             <ul className="space-y-3">
@@ -445,6 +446,59 @@ function HowItWorks() {
           </div>
         </li>
       </ol>
+    </section>
+  );
+}
+
+function AiSection() {
+  const row = "flex items-center justify-between gap-3 border border-line bg-cream px-3 py-2 text-sm text-ink";
+  const card = "flex flex-col border-2 border-cream/80 bg-smoke";
+  return (
+    <section id="ai" className="scroll-mt-[76px] border-b-2 border-ink bg-smoke px-section py-[80px] text-cream md:py-[120px]" aria-labelledby="ai-heading">
+      <div className="max-w-[760px]">
+        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em] text-lime"><Sparkles size={14} aria-hidden="true" /> Plotline AI</span>
+        <h2 id="ai-heading" className={cn(h2Section, "mt-4")}>Describe the change. Get the path.</h2>
+        <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-cream/75">Write a few sentences about what you are about to do and Plotline AI drafts the milestones. When plans move, tell it what changed and it reworks the dates of what is left. You review everything before it is saved.</p>
+      </div>
+
+      <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <article className={card}>
+          <div className="p-7 md:p-9">
+            <h3 className={tileTitle}>Build with AI</h3>
+            <p className="mt-3 max-w-[44ch] text-cream/75">Describe the chapter in your own words. You get milestones with dates, ready to edit, reorder or delete before you use the plot.</p>
+          </div>
+          <div className="mt-auto border-t-2 border-cream/80 bg-paper p-6 text-ink md:p-7" aria-hidden="true">
+            <span className="block text-xs text-ink/60">Your description</span>
+            <div className="border-b-2 border-line pb-2 text-[15px] leading-snug">I am moving to Lagos in September and need a place sorted before I go.</div>
+            <ul className="mt-4 space-y-2">
+              <li className={row}><span className="font-medium">Find apartments</span><span className="text-xs text-ink/60">3 Sep 2026</span></li>
+              <li className={row}><span className="font-medium">Inspect apartments</span><span className="text-xs text-ink/60">10 Sep 2026</span></li>
+              <li className={row}><span className="font-medium">Pay deposit</span><span className="text-xs text-ink/60">18 Sep 2026</span></li>
+            </ul>
+          </div>
+        </article>
+
+        <article className={card}>
+          <div className="p-7 md:p-9">
+            <h3 className={tileTitle}>Adjust with AI</h3>
+            <p className="mt-3 max-w-[44ch] text-cream/75">Say what changed, such as a delayed start or a new deadline. Completed milestones stay as they are, and you approve the new dates before they apply.</p>
+          </div>
+          <div className="mt-auto border-t-2 border-cream/80 bg-paper p-6 text-ink md:p-7" aria-hidden="true">
+            <span className="block text-xs text-ink/60">What changed</span>
+            <div className="border-b-2 border-line pb-2 text-[15px] leading-snug">The landlord pushed the handover back two weeks.</div>
+            <ul className="mt-4 space-y-2">
+              <li className={cn(row, "text-ink/60")}><span className="flex items-center gap-2 font-medium"><Lock size={13} /> Inspect apartments</span><span className="text-xs">Complete</span></li>
+              <li className={row}><span className="font-medium">Pay deposit</span><span className="text-xs text-ink/60">18 Sep to 2 Oct</span></li>
+              <li className={row}><span className="font-medium">Get the keys</span><span className="text-xs text-ink/60">28 Sep to 12 Oct</span></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+
+      <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2">
+        <Link to="/create?ai=1" className={btnLight}>Build with AI <ArrowRight size={18} /></Link>
+        <Link to="/create" className="font-semibold text-cream underline underline-offset-4 hover:text-lime">Create a plot yourself</Link>
+      </div>
     </section>
   );
 }
@@ -499,7 +553,7 @@ function Features() {
         <article className="flex flex-col justify-between gap-8 border-2 border-ink bg-blue p-7 text-cream md:col-span-2">
           <div>
             <h3 className={tileTitle}>Stays on your device</h3>
-            <p className="mt-3 text-cream/85">No account. Your plots are saved in your browser.</p>
+            <p className="mt-3 text-cream/85">No account. Your plots and what you write to Plotline AI stay in your browser.</p>
           </div>
           <Lock size={30} aria-hidden="true" />
         </article>
@@ -520,6 +574,9 @@ function Features() {
 }
 
 const faqs = [
+  { q: "What is Plotline AI?", a: "A planning tool that turns a short description into a draft path of milestones, and reworks the dates of unfinished milestones when plans change. Completed milestones stay as they are." },
+  { q: "Is the plan it gives me final?", a: "No. It is a draft. Edit, reorder or remove any milestone, and check every date before you apply it." },
+  { q: "Does Plotline AI send what I write anywhere?", a: "No. It runs in your browser, so your description stays on your device, like the rest of your plots." },
   { q: "Do I need an account?", a: "No. Your plots are saved in your browser, so there is nothing to sign up for." },
   { q: "Will my plots show up on my phone and my laptop?", a: "Not yet. A plot lives in the browser where you created it, so another browser or device starts empty. Clearing your browser data also removes your plots." },
   { q: "How is this different from a to-do list?", a: "A to-do list holds tasks. A plot holds the moments of a chapter in order and shows which one you are in." },
@@ -564,9 +621,10 @@ function FinalCta() {
         ))}
       </div>
       <h2 id="cta-heading" className="mt-10 max-w-[16ch] font-display text-[length:clamp(40px,6.5vw,92px)] font-extrabold tracking-[-.05em] leading-[.95]">You already know the chapter. Give it a path.</h2>
-      <p className="mt-6 max-w-[48ch] text-lg text-cream/75">Start with a name and a few milestones. You can reorder them whenever the plan changes.</p>
+      <p className="mt-6 max-w-[48ch] text-lg text-cream/75">Describe it and let Plotline AI draft the milestones, or add them yourself. You can reorder them whenever the plan changes.</p>
       <div className="mt-9 flex flex-wrap items-center gap-6">
-        <Link to="/create" className={btnLight}>Start plotting <ArrowRight size={18} /></Link>
+        <Link to="/create?ai=1" className={btnLight}>Build with AI <ArrowRight size={18} /></Link>
+        <Link to="/create" className="font-semibold text-cream underline underline-offset-4 hover:text-lime">Create a plot yourself</Link>
         <Link to="/plots" className="font-semibold text-cream underline underline-offset-4 hover:text-lime">See your plots</Link>
       </div>
     </section>
@@ -591,16 +649,17 @@ function Home() {
 
   return (
     <main>
-      <Seo title="Plotline — See the path." description="Turn a big, messy chapter into a visual path of meaningful milestones." />
+      <Seo title="Plotline — See the path." description="Turn a big, messy chapter into a visual path of milestones. Describe it and Plotline AI drafts the plan." />
 
       <section className="relative overflow-hidden border-b-2 border-ink bg-orange px-section py-[48px] md:py-[72px] lg:py-[88px]">
         <div className="pointer-events-none absolute inset-0 animate-pattern-drift bg-[radial-gradient(var(--color-ink)_1.3px,transparent_1.3px)] bg-[length:18px_18px] opacity-70 [mask-image:linear-gradient(90deg,black_0%,transparent_78%)]" aria-hidden="true" />
         <div className="relative z-[1] grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-[5vw]">
           <div className="animate-rise-in">
             <h1 className={cn(heroH1, "text-balance")}>Make the next chapter visible.</h1>
-            <p className="mt-6 max-w-[46ch] text-lg leading-relaxed sm:text-xl">Turn a big change into a path of milestones, so you can see where you are and what comes next.</p>
+            <p className="mt-6 max-w-[46ch] text-lg leading-relaxed sm:text-xl">Describe a big change and Plotline AI drafts the milestones. Then mark where you are and see what comes next.</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
-              <Link to="/create" className={btnDark}>Create a plot <ArrowRight size={18} /></Link>
+              <Link to="/create?ai=1" className={btnDark}><Sparkles size={18} aria-hidden="true" /> Build with AI</Link>
+              <Link to="/create" className={textLink}>Create a plot yourself</Link>
               <a href="#how" className={textLink}>See how it works</a>
             </div>
           </div>
@@ -669,6 +728,7 @@ function Home() {
 
       <ProblemSection />
       <HowItWorks />
+      <AiSection />
 
       <section id="demo" className="overflow-hidden border-b-2 border-ink bg-lime py-[80px] md:py-[120px]" aria-labelledby="demo-heading">
         <div className="px-section mb-12 max-w-[760px]">
@@ -840,7 +900,7 @@ function PathPreview({ title, steps }: { title: string; steps: { title: string; 
 
 function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
   const navigate = useNavigate();
-  const [aiOpen, setAiOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(() => new URLSearchParams(window.location.search).get("ai") === "1");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(todayISO);
