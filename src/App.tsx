@@ -12,7 +12,6 @@ import {
   GripVertical,
   Lock,
   Plus,
-  Sparkles,
   Trash2,
 } from "lucide-react";
 import {
@@ -405,7 +404,7 @@ function HowItWorks() {
           <div className={stepVisual}>
             <span className="block text-xs text-ink/60">Your description</span>
             <div className="border-b-2 border-line pb-2 text-[15px] leading-snug">I am moving to Lagos in September and need a place sorted before I go.</div>
-            <div className="mt-3 inline-flex items-center gap-2 bg-ink px-3 py-1.5 text-sm font-semibold text-cream"><Sparkles size={14} aria-hidden="true" /> Build my plot</div>
+            <div className="mt-3 inline-flex items-center gap-2 bg-ink px-3 py-1.5 text-sm font-semibold text-cream">Build my plot</div>
           </div>
         </li>
 
@@ -456,7 +455,7 @@ function AiSection() {
   return (
     <section id="ai" className="scroll-mt-[76px] border-b-2 border-ink bg-smoke px-section py-[80px] text-cream md:py-[120px]" aria-labelledby="ai-heading">
       <div className="max-w-[760px]">
-        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em] text-lime"><Sparkles size={14} aria-hidden="true" /> Plotline AI</span>
+        <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em] text-lime">Plotline AI</span>
         <h2 id="ai-heading" className={cn(h2Section, "mt-4")}>Describe the change. Get the path.</h2>
         <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-cream/75">Write a few sentences about what you are about to do and Plotline AI drafts the milestones. When plans move, tell it what changed and it reworks the dates of what is left. You review everything before it is saved.</p>
       </div>
@@ -658,7 +657,7 @@ function Home() {
             <h1 className={cn(heroH1, "text-balance")}>Make the next chapter visible.</h1>
             <p className="mt-6 max-w-[46ch] text-lg leading-relaxed sm:text-xl">Describe a big change and Plotline AI drafts the milestones. Then mark where you are and see what comes next.</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
-              <Link to="/create?ai=1" className={btnDark}><Sparkles size={18} aria-hidden="true" /> Build with AI</Link>
+              <Link to="/create?ai=1" className={btnDark}>Build with AI</Link>
               <Link to="/create" className={textLink}>Create a plot yourself</Link>
               <a href="#how" className={textLink}>See how it works</a>
             </div>
