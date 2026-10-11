@@ -6,14 +6,14 @@ Plotline turns a large goal or life change into a visual path of milestones. Eac
 
 Plots are saved in the browser with `localStorage`. There is no account and no backend, so a plot is only available in the browser where it was created.
 
-## Plotline AI preview
+## Plotline AI
 
-The create flow and individual plot pages include a preview of two planned features:
+The create flow and individual plot pages include two planning tools:
 
 - **Build with AI:** describe a goal and review an editable proposed timeline.
 - **Adjust with AI:** explain a change and review suggested timing adjustments. Completed milestones stay unchanged.
 
-The preview runs sample logic in the browser. It does not call an AI model, send prompts to a server, or need API keys. The output is illustrative and is labelled as a preview in the interface. A live model integration is planned for later.
+Both run in the browser with local logic. There is no external model, no server call and no API key.
 
 ## Run locally
 
@@ -29,9 +29,9 @@ npm run dev
 | Path | Page |
 | --- | --- |
 | `/` | Home, with switchable example plots |
-| `/create` | Create a plot, manually or with the AI preview |
+| `/create` | Create a plot, manually or with Plotline AI |
 | `/plots` | List of saved plots |
-| `/plot/:id` | A single plot and its timeline, including the replanning preview |
+| `/plot/:id` | A single plot and its timeline, including replanning |
 | `/privacy`, `/terms` | Legal pages |
 
 ## Stack

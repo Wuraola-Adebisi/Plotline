@@ -751,10 +751,10 @@ const legalDocs = {
     description: "How Plotline handles information and local data.",
     intro: "Plotline is a browser-based tool for turning a major chapter or goal into a visual sequence of milestones. This policy explains what information the current version of Plotline handles.",
     sections: [
-      { id: "what-we-store", title: "What we store", body: "Your plots are stored in your browser using local storage. They may include chapter names, descriptions, dates, milestone titles, notes, and progress states that you enter. The current AI preview uses sample logic in your browser and does not send your prompt or plot to a server. A future live AI integration may send prompts and relevant plot details to a server and AI provider; this policy will be updated before that feature is enabled." },
-      { id: "what-we-collect", title: "What we collect", body: "Plotline does not require an account, collect a name or email address for this feature, or use advertising trackers. We do not currently operate a backend database for your plots. The AI preview is not connected to an AI provider." },
+      { id: "what-we-store", title: "What we store", body: "Your plots are stored in your browser using local storage. They may include chapter names, descriptions, dates, milestone titles, notes, and progress states that you enter. Plotline AI runs in your browser and does not send your prompt or plot to a server. If that changes, this policy will be updated before it does." },
+      { id: "what-we-collect", title: "What we collect", body: "Plotline does not require an account, collect a name or email address for this feature, or use advertising trackers. We do not operate a backend database for your plots, and no prompts or plot details are sent to an AI provider." },
       { id: "your-responsibility", title: "Your responsibility", body: "Because plot data is stored locally, clearing browser storage, using a different browser or device, or certain browser privacy settings may remove access to saved plots. Do not use Plotline as the sole record for critical information." },
-      { id: "changes", title: "Changes", body: "This policy will be updated before any live AI provider, server-side processing, analytics, or other service changes how information is handled." },
+      { id: "changes", title: "Changes", body: "This policy will be updated before any AI provider, server-side processing, analytics, or other service changes how information is handled." },
     ],
   },
   terms: {
@@ -893,7 +893,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
 
       <section className="mt-8 flex flex-col gap-4 border-2 border-ink bg-lime p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="max-w-[48ch]">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]">Plotline AI <span className="border border-ink bg-cream px-1.5 py-0.5 text-[10px] tracking-[.08em]">Preview</span></span>
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]">Plotline AI</span>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-[-.04em]">Start with the idea, not a blank form.</h2>
           <p className="mt-2 text-sm text-ink/75">Describe what you want to do and get a milestone plan you can make your own.</p>
         </div>
