@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Check, Sparkles, X } from "lucide-react";
+import { ArrowRight, Check, X } from "lucide-react";
 
 type Status = "upcoming" | "current" | "complete";
 type Milestone = {
@@ -221,7 +221,7 @@ export default function PlotlineAIMockup({
         <header className="flex items-start justify-between gap-4 border-b-2 border-ink bg-lime p-5 sm:p-7">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.12em]">
-              <Sparkles size={15} /> Plotline AI <span className="border border-ink px-1.5 py-0.5">Preview</span>
+              Plotline AI <span className="border border-ink px-1.5 py-0.5">Preview</span>
             </span>
             <h2 id="plotline-ai-heading" className="mt-3 font-display text-3xl font-extrabold leading-none tracking-[-.05em] sm:text-4xl">
               {replan ? "When plans change" : "Give the chapter a shape"}
@@ -239,7 +239,7 @@ export default function PlotlineAIMockup({
 
         <div className="space-y-5 p-5 sm:p-7">
           <div className="flex items-start gap-3 border-2 border-ink bg-blue p-3.5 text-cream">
-            <Sparkles size={18} className="mt-0.5 flex-none text-lime" />
+            
             <p className="text-sm leading-relaxed">
               <strong className="font-bold">Interactive mock-up.</strong> No AI provider is connected. These sample suggestions are generated locally in your browser, so you can test the flow before credits are available.
             </p>
@@ -350,7 +350,7 @@ export default function PlotlineAIMockup({
               </button>
             ) : (
               <button type="button" className="inline-flex min-h-12 items-center justify-center gap-2 border-2 border-ink bg-ink px-5 font-bold text-cream hover:shadow-[4px_4px_0_var(--color-ink)]" onClick={generate}>
-                <Sparkles size={17} /> {replan ? "Preview adjustments" : "Build my plot"}
+                {replan ? "Preview adjustments" : "Build my plot"}
               </button>
             )}
           </div>
