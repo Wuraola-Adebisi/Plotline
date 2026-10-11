@@ -12,7 +12,6 @@ import {
   GripVertical,
   Lock,
   Plus,
-  Sparkles,
   Trash2,
 } from "lucide-react";
 import {
@@ -881,11 +880,11 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
 
       <section className="mt-8 flex flex-col gap-4 border-2 border-ink bg-lime p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="max-w-[48ch]">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]"><Sparkles size={15} /> Plotline AI <span className="border border-ink px-1.5 py-0.5">Preview</span></span>
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]">Plotline AI <span className="border border-ink px-1.5 py-0.5">Preview</span></span>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-[-.04em]">Start with the idea, not a blank form.</h2>
           <p className="mt-2 text-sm text-ink/75">Describe the chapter and get a milestone proposal you can edit. This preview works without an AI connection.</p>
         </div>
-        <button type="button" className={cn(btnDark, "flex-none")} onClick={() => setAiOpen(true)}><Sparkles size={17} /> Build with AI</button>
+        <button type="button" className={cn(btnDark, "flex-none")} onClick={() => setAiOpen(true)}>Build with AI</button>
       </section>
 
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,.7fr)] lg:gap-[5vw]">
@@ -1188,7 +1187,7 @@ function PlotPage({
               <p className="mt-2 text-ink/70">Select a milestone to change where you are. Use the arrows to reorder, or drag the handle on a computer.</p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <button type="button" className={cn(btnDark, "min-h-10 px-3")} onClick={() => setAiOpen(true)}><Sparkles size={16} /> Adjust with AI <span className="border border-cream/50 px-1 text-[10px] uppercase tracking-wider">Preview</span></button>
+              <button type="button" className={cn(btnDark, "min-h-10 px-3")} onClick={() => setAiOpen(true)}>Adjust with AI <span className="border border-cream/50 px-1 text-[10px] uppercase tracking-wider">Preview</span></button>
               <button type="button" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/60 hover:text-[#b00020]" onClick={deletePlot}><Trash2 size={15} /> Delete plot</button>
             </div>
           </div>
