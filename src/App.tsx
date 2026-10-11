@@ -26,6 +26,7 @@ import {
   useParams,
 } from "react-router-dom";
 import { cn } from "./lib/cn";
+import PlotlineAIMockup from "./components/PlotlineAIMockup";
 
 type MilestoneStatus = "upcoming" | "current" | "complete";
 
@@ -268,7 +269,7 @@ function Footer() {
 
       <div className="flex flex-col gap-2 border-t border-white/15 py-6 text-sm text-cream/60 md:flex-row md:justify-between">
         <span>© {new Date().getFullYear()} Plotline</span>
-        <span>Your plots are saved in your browser. Nothing is sent to a server.</span>
+        <span>Your plans, your pace. Turn big changes into clear next steps.</span>
       </div>
     </footer>
   );
@@ -737,10 +738,10 @@ const legalDocs = {
     description: "How Plotline handles information and local data.",
     intro: "Plotline is a browser-based tool for turning a major chapter or goal into a visual sequence of milestones. This policy explains what information the current version of Plotline handles.",
     sections: [
-      { id: "what-we-store", title: "What we store", body: "Your plots are stored in your browser using local storage. They may include chapter names, descriptions, dates, milestone titles, notes, and progress states that you enter. This data is not sent to a Plotline server by the current version of the product." },
-      { id: "what-we-collect", title: "What we collect", body: "Plotline does not currently require an account, collect a name or email address, or use advertising trackers. We do not currently operate a backend database for your plots." },
+      { id: "what-we-store", title: "What we store", body: "Your plots are stored in your browser using local storage. They may include chapter names, descriptions, dates, milestone titles, notes, and progress states that you enter. The current AI preview uses sample logic in your browser and does not send your prompt or plot to a server. A future live AI integration may send prompts and relevant plot details to a server and AI provider; this policy will be updated before that feature is enabled." },
+      { id: "what-we-collect", title: "What we collect", body: "Plotline does not require an account, collect a name or email address for this feature, or use advertising trackers. We do not currently operate a backend database for your plots. The AI preview is not connected to an AI provider." },
       { id: "your-responsibility", title: "Your responsibility", body: "Because plot data is stored locally, clearing browser storage, using a different browser or device, or certain browser privacy settings may remove access to saved plots. Do not use Plotline as the sole record for critical information." },
-      { id: "changes", title: "Changes", body: "This policy may change as Plotline gains features such as accounts, analytics, cloud sync, or other services. If those features materially change how information is handled, this page will be updated." },
+      { id: "changes", title: "Changes", body: "This policy will be updated before any live AI provider, server-side processing, analytics, or other service changes how information is handled." },
     ],
   },
   terms: {
@@ -826,6 +827,7 @@ function PathPreview({ title, steps }: { title: string; steps: { title: string; 
 
 function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
   const navigate = useNavigate();
+  const [aiOpen, setAiOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState(todayISO);
@@ -875,6 +877,15 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
         <h1 className={pageH1}>What are you moving through?</h1>
         <p className={cn(leadText, "mt-5")}>A chapter can be practical, personal or ambitious. Name it, then add the moments that matter.</p>
       </div>
+
+      <section className="mt-8 flex flex-col gap-4 border-2 border-ink bg-lime p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <div className="max-w-[48ch]">
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]">Plotline AI</span>
+          <h2 className="mt-2 font-display text-2xl font-bold tracking-[-.04em]">Start with the idea, not a blank form.</h2>
+          <p className="mt-2 text-sm text-ink/75">Describe what you want to do and get a milestone plan you can make your own.</p>
+        </div>
+        <button type="button" className={cn(btnDark, "flex-none")} onClick={() => setAiOpen(true)}>Build with AI</button>
+      </section>
 
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,.7fr)] lg:gap-[5vw]">
         <div>
@@ -956,6 +967,24 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
           <PathPreview title={title} steps={milestones} />
         </aside>
       </div>
+      {aiOpen && (
+        <PlotlineAIMockup
+          mode="create"
+          startDate={startDate}
+          onClose={() => setAiOpen(false)}
+          onApply={(proposal) => {
+            setTitle(proposal.title);
+            setDescription(proposal.description);
+            setStartDate(proposal.startDate || startDate);
+            setMilestones(proposal.milestones.map((item) => ({
+              title: item.title,
+              date: item.date || "",
+              note: item.note || "",
+            })));
+            setAiOpen(false);
+          }}
+        />
+      )}
     </main>
   );
 }
@@ -1061,6 +1090,7 @@ function PlotPage({
   const navigate = useNavigate();
   const plot = plots.find((item) => item.id === id);
   const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [aiOpen, setAiOpen] = useState(false);
 
   const progress = useMemo(() => {
     if (!plot?.milestones.length) return 0;
@@ -1156,7 +1186,10 @@ function PlotPage({
               <h2 id="path-heading" className="font-display text-[length:clamp(30px,4vw,48px)] leading-none font-extrabold tracking-[-.05em]">The path</h2>
               <p className="mt-2 text-ink/70">Select a milestone to change where you are. Use the arrows to reorder, or drag the handle on a computer.</p>
             </div>
-            <button type="button" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/60 hover:text-[#b00020]" onClick={deletePlot}><Trash2 size={15} /> Delete plot</button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button type="button" className={cn(btnDark, "min-h-10 px-3")} onClick={() => setAiOpen(true)}>Adjust with AI</button>
+              <button type="button" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/60 hover:text-[#b00020]" onClick={deletePlot}><Trash2 size={15} /> Delete plot</button>
+            </div>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 border-2 border-ink bg-cream px-5 py-4">
@@ -1292,6 +1325,29 @@ function PlotPage({
         <p className="flex items-center gap-3 font-semibold"><ArrowDownRight size={28} className="text-blue" /> Progress does not need to be linear.</p>
         <Link to="/create" className={btnDark}>Start another chapter <Plus size={18} /></Link>
       </section>
+      {aiOpen && (
+        <PlotlineAIMockup
+          mode="replan"
+          currentPlot={plot}
+          onClose={() => setAiOpen(false)}
+          onApply={(proposal) => {
+            onUpdate({
+              ...plot,
+              title: proposal.title || plot.title,
+              description: proposal.description,
+              startDate: proposal.startDate || plot.startDate,
+              milestones: proposal.milestones.map((item) => ({
+                id: item.id || crypto.randomUUID(),
+                title: item.title,
+                date: item.date || undefined,
+                note: item.note || undefined,
+                status: item.status,
+              })),
+            });
+            setAiOpen(false);
+          }}
+        />
+      )}
     </main>
   );
 }
