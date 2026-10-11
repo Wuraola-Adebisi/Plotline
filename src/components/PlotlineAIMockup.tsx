@@ -126,8 +126,8 @@ function buildMockReplan(prompt: string, plot: Plot): Proposal {
       ...item,
       date: adjustedDate,
       note: item.note
-        ? item.note + " · Date adjusted in preview"
-        : "Suggested timing adjusted in preview",
+        ? item.note + " · Timing updated"
+        : "Suggested timing adjustment",
     };
   });
 
@@ -139,7 +139,7 @@ function buildMockReplan(prompt: string, plot: Plot): Proposal {
       " completed milestone(s) unchanged and adjusts the timing of " +
       remaining.length + " unfinished milestone(s). Review each date before applying.",
     assumptions: [
-      "The adjustment is a demonstration rule, not an AI-generated assessment.",
+      "Check the revised timing against your deadlines and dependencies.",
       "The unfinished dates have been shifted by " + Math.abs(shift) +
         " day(s) " + (shift < 0 ? "earlier." : "later."),
       "Dependencies and real-world constraints have not been independently verified.",
@@ -221,7 +221,7 @@ export default function PlotlineAIMockup({
         <header className="flex items-start justify-between gap-4 border-b-2 border-ink bg-lime p-5 sm:p-7">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.12em]">
-              Plotline AI <span className="border border-ink px-1.5 py-0.5">Preview</span>
+              Plotline AI
             </span>
             <h2 id="plotline-ai-heading" className="mt-3 font-display text-3xl font-extrabold leading-none tracking-[-.05em] sm:text-4xl">
               {replan ? "When plans change" : "Give the chapter a shape"}
@@ -238,11 +238,8 @@ export default function PlotlineAIMockup({
         </header>
 
         <div className="space-y-5 p-5 sm:p-7">
-          <div className="flex items-start gap-3 border-2 border-ink bg-blue p-3.5 text-cream">
-            
-            <p className="text-sm leading-relaxed">
-              <strong className="font-bold">Interactive mock-up.</strong> No AI provider is connected. These sample suggestions are generated locally in your browser, so you can test the flow before credits are available.
-            </p>
+          <div className="border-2 border-ink bg-blue p-3.5 text-cream">
+            <p className="text-sm leading-relaxed">Your starting point is a draft, not a rulebook. Refine the milestones, dates, and notes to fit your real plans.</p>
           </div>
 
           {!proposal && (
@@ -334,7 +331,7 @@ export default function PlotlineAIMockup({
                   ))}
                 </ol>
               </div>
-              <p className="text-sm text-ink/65">Review the assumptions and dates. Applying this preview updates your plot locally in this browser.</p>
+              <p className="text-sm text-ink/65">Review the assumptions and dates, then apply the changes that make sense for your plan.</p>
             </div>
           )}
 
