@@ -2,7 +2,7 @@
 
 Live: https://plotline-lac.vercel.app
 
-Plotline turns a large goal or life change into a visual path of milestones. Each milestone is upcoming, current or complete, and the current one marks where you are in the chapter. Milestones can be reordered by drag and drop or with the arrow buttons.
+Plotline turns a large goal or life change into a visual path of milestones, drafted from a short description with Plotline AI or built by hand. Each milestone is upcoming, current or complete, and the current one marks where you are in the chapter. Milestones can be reordered by drag and drop or with the arrow buttons.
 
 Plots are saved in the browser with `localStorage`. There is no account and no backend, so a plot is only available in the browser where it was created.
 
