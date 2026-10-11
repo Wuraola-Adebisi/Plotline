@@ -101,7 +101,7 @@ function buildMockProposal(prompt: string, startDate: string): Proposal {
     startDate,
     summary: "A first-pass plan based on your description. Adjust the milestones and dates to fit your actual circumstances.",
     assumptions: [
-      "The dates are illustrative, not predictions or commitments.",
+      "Dates are estimates. Adjust them to match your own schedule.",
       "The plan assumes you can make progress between each milestone.",
     ],
     milestones: steps.map((step, index) =>
@@ -135,7 +135,7 @@ function buildMockReplan(prompt: string, plot: Plot): Proposal {
     title: plot.title,
     description: plot.description || "",
     startDate: plot.startDate,
-    summary: "This preview keeps " + completed.length +
+    summary: "This plan keeps " + completed.length +
       " completed milestone(s) unchanged and adjusts the timing of " +
       remaining.length + " unfinished milestone(s). Review each date before applying.",
     assumptions: [
@@ -166,7 +166,7 @@ export default function PlotlineAIMockup({
 
   const generate = () => {
     if (!prompt.trim()) {
-      setError("Add a little context first so the preview has something to work with.");
+      setError("Add a little context first so there is something to work with.");
       return;
     }
     setError("");
@@ -221,7 +221,7 @@ export default function PlotlineAIMockup({
         <header className="flex items-start justify-between gap-4 border-b-2 border-ink bg-lime p-5 sm:p-7">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.12em]">
-              Plotline AI <span className="border border-ink bg-cream px-1.5 py-0.5 text-[10px] tracking-[.08em]">Preview</span>
+              Plotline AI
             </span>
             <h2 id="plotline-ai-heading" className="mt-3 font-display text-3xl font-extrabold leading-none tracking-[-.05em] sm:text-4xl">
               {replan ? "When plans change" : "Give the chapter a shape"}
@@ -232,16 +232,12 @@ export default function PlotlineAIMockup({
                 : "Describe what you want to accomplish and start with an editable milestone proposal."}
             </p>
           </div>
-          <button type="button" className="grid size-10 flex-none place-items-center border-2 border-ink bg-cream hover:bg-white" onClick={onClose} aria-label="Close preview">
+          <button type="button" className="grid size-10 flex-none place-items-center border-2 border-ink bg-cream hover:bg-white" onClick={onClose} aria-label="Close">
             <X size={18} />
           </button>
         </header>
 
         <div className="space-y-5 p-5 sm:p-7">
-          <div className="border-2 border-ink bg-blue p-3.5 text-cream">
-            <p className="text-sm leading-relaxed">This is a preview. The plan below comes from sample logic in your browser, not a live AI model, and nothing you type leaves your device. Edit the milestones, dates and notes to fit your real plans.</p>
-          </div>
-
           {!proposal && (
             <div>
               <label className="mb-2 block text-sm font-bold" htmlFor="plotline-ai-prompt">
@@ -263,7 +259,7 @@ export default function PlotlineAIMockup({
               </div>
               {!replan && (
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="w-full text-xs font-bold uppercase tracking-[.08em] text-ink/60">Try a sample</span>
+                  <span className="w-full text-xs font-bold uppercase tracking-[.08em] text-ink/60">Try an example</span>
                   {[
                     "I want to move to Lagos and get settled in four months.",
                     "I want to launch my first product.",
@@ -347,7 +343,7 @@ export default function PlotlineAIMockup({
               </button>
             ) : (
               <button type="button" className="inline-flex min-h-12 items-center justify-center gap-2 border-2 border-ink bg-ink px-5 font-bold text-cream hover:shadow-[4px_4px_0_var(--color-ink)]" onClick={generate}>
-                {replan ? "Preview adjustments" : "Build my plot"}
+                {replan ? "Adjust my plot" : "Build my plot"}
               </button>
             )}
           </div>
