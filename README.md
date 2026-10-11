@@ -1,21 +1,23 @@
 # Plotline
 
+Live: https://plotline-lac.vercel.app
+
 Plotline turns a large goal or life change into a visual path of milestones. Each milestone is upcoming, current or complete, and the current one marks where you are in the chapter. Milestones can be reordered by drag and drop or with the arrow buttons.
 
 Plots are saved in the browser with `localStorage`. There is no account and no backend, so a plot is only available in the browser where it was created.
 
-## AI experience preview
+## Plotline AI preview
 
-The create flow and individual plot pages include an interactive **Plotline AI** mock-up for two planned capabilities:
+The create flow and individual plot pages include a preview of two planned features:
 
 - **Build with AI:** describe a goal and review an editable proposed timeline.
-- **Adjust with AI:** explain a change and review suggested timing adjustments while completed milestones remain unchanged.
+- **Adjust with AI:** explain a change and review suggested timing adjustments. Completed milestones stay unchanged.
 
-This is a frontend prototype only. It uses local sample logic in the browser; it does not call an AI model, use AWS Bedrock, send prompts to a server, or require API keys or AI credits. The sample output is illustrative, not real AI reasoning. The live Bedrock integration will be added separately after provider access and credits are ready.
+The preview runs sample logic in the browser. It does not call an AI model, send prompts to a server, or need API keys. The output is illustrative and is labelled as a preview in the interface. A live model integration is planned for later.
 
 ## Run locally
 
-```bash
+```
 npm install
 npm run dev
 ```
@@ -34,8 +36,8 @@ npm run dev
 
 ## Stack
 
-React 19, TypeScript, Vite, React Router and lucide-react. Styles are in `src/App.css`, with design tokens and the font stack in `src/index.css`.
+React 19, TypeScript, Vite, React Router, Tailwind CSS v4 and lucide-react. Design tokens and the font stack are in `src/index.css`.
 
 ## Deployment
 
-The site is deployed on Vercel. `vercel.json` rewrites client-side routes to `index.html`, which lets direct visits and refreshes on routes such as `/plots` load the app instead of returning a 404.
+Deployed on Vercel. `vercel.json` rewrites client-side routes to `index.html`, so direct visits and refreshes on routes such as `/plots` load the app instead of returning a 404.

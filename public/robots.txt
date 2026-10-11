@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://plotline.vercel.app/sitemap.xml
+Sitemap: https://plotline-lac.vercel.app/sitemap.xml

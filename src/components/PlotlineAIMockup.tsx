@@ -221,7 +221,7 @@ export default function PlotlineAIMockup({
         <header className="flex items-start justify-between gap-4 border-b-2 border-ink bg-lime p-5 sm:p-7">
           <div>
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.12em]">
-              Plotline AI
+              Plotline AI <span className="border border-ink bg-cream px-1.5 py-0.5 text-[10px] tracking-[.08em]">Preview</span>
             </span>
             <h2 id="plotline-ai-heading" className="mt-3 font-display text-3xl font-extrabold leading-none tracking-[-.05em] sm:text-4xl">
               {replan ? "When plans change" : "Give the chapter a shape"}
@@ -239,7 +239,7 @@ export default function PlotlineAIMockup({
 
         <div className="space-y-5 p-5 sm:p-7">
           <div className="border-2 border-ink bg-blue p-3.5 text-cream">
-            <p className="text-sm leading-relaxed">Your starting point is a draft, not a rulebook. Refine the milestones, dates, and notes to fit your real plans.</p>
+            <p className="text-sm leading-relaxed">This is a preview. The plan below comes from sample logic in your browser, not a live AI model, and nothing you type leaves your device. Edit the milestones, dates and notes to fit your real plans.</p>
           </div>
 
           {!proposal && (

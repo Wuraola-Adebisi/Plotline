@@ -121,6 +121,18 @@ const examplePlots: Plotline[] = [
 
 const seedPlot = examplePlots[1];
 
+function isMilestone(value: unknown): value is Milestone {
+  if (!value || typeof value !== "object") return false;
+  const milestone = value as Partial<Milestone>;
+  return (
+    typeof milestone.id === "string" &&
+    typeof milestone.title === "string" &&
+    (milestone.status === "upcoming" || milestone.status === "current" || milestone.status === "complete") &&
+    (milestone.date === undefined || typeof milestone.date === "string") &&
+    (milestone.note === undefined || typeof milestone.note === "string")
+  );
+}
+
 function isPlot(value: unknown): value is Plotline {
   if (!value || typeof value !== "object") return false;
   const plot = value as Partial<Plotline>;
@@ -128,7 +140,8 @@ function isPlot(value: unknown): value is Plotline {
     typeof plot.id === "string" &&
     typeof plot.title === "string" &&
     typeof plot.startDate === "string" &&
-    Array.isArray(plot.milestones)
+    Array.isArray(plot.milestones) &&
+    plot.milestones.every(isMilestone)
   );
 }
 
@@ -880,7 +893,7 @@ function CreatePlot({ onCreate }: { onCreate: (plot: Plotline) => void }) {
 
       <section className="mt-8 flex flex-col gap-4 border-2 border-ink bg-lime p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
         <div className="max-w-[48ch]">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]">Plotline AI</span>
+          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.1em]">Plotline AI <span className="border border-ink bg-cream px-1.5 py-0.5 text-[10px] tracking-[.08em]">Preview</span></span>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-[-.04em]">Start with the idea, not a blank form.</h2>
           <p className="mt-2 text-sm text-ink/75">Describe what you want to do and get a milestone plan you can make your own.</p>
         </div>
